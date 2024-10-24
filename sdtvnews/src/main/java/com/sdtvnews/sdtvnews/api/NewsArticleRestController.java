@@ -1,0 +1,76 @@
+package com.sdtvnews.sdtvnews.api;
+
+
+import com.sdtvnews.sdtvnews.config.exception.ResponseDTO;
+import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
+import com.sdtvnews.sdtvnews.entity.NewsArticle;
+import com.sdtvnews.sdtvnews.services.NewsArticleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/news")
+@RequiredArgsConstructor
+public class NewsArticleRestController {
+
+    private final NewsArticleService newsArticleService;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createArticle(@RequestParam("title") String title,
+                                           @RequestParam("content") String content,
+//                                           @RequestParam(value = "cateId", required = false) String cateId,
+//                                           @RequestParam(value = "userId", required = false) String userId,
+//                                           @RequestParam(value = "scheduleDate", required = false) String scheduleDate,
+//                                           @RequestParam(value = "scheduleStatus", required = false) String scheduleStatus,
+                                           @RequestParam("images") MultipartFile[] images) {
+        try {
+            NewsArticleRequest request = new NewsArticleRequest();
+            request.setTitle(title);
+            request.setContent(content);
+//            request.setCateId(Long.valueOf(cateId));
+//            request.setUserId(Long.valueOf(userId));
+//            request.setScheduleDate(LocalDateTime.parse(scheduleDate, formatter));
+//            request.setScheduleStatus(Integer.valueOf(scheduleStatus));
+            request.setImages(images);
+            NewsArticle createdArticle = newsArticleService.createArticle(request);
+            return ResponseEntity.ok(new ResponseDTO<>("success", "News article created successfully", createdArticle));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResponseDTO<>("error", "An error occurred", null));
+        }
+    }
+
+
+    // Get all news articles
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllArticles() {
+        List<NewsArticle> articles = newsArticleService.getAllArticles();
+        return ResponseEntity.ok(new ResponseDTO<>("success", "List of news articles", articles));
+    }
+
+    // Get news article by ID
+    @GetMapping("/find/{id}")
+    public ResponseEntity<?> getArticleById(@PathVariable Long id) {
+        try {
+            NewsArticle article = newsArticleService.getArticleById(id);
+            return ResponseEntity.ok(new ResponseDTO<>("success", "Article found", article));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(new ResponseDTO<>("error", e.getMessage(), null));
+        }
+    }
+
+    // Delete an article (soft delete by updating status)
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteArticle(@PathVariable Long id) {
+        newsArticleService.deleteArticle(id);
+        return ResponseEntity.ok(new ResponseDTO<>("success", "Article deleted successfully", null));
+    }
+}
