@@ -21,29 +21,33 @@ public class CatgoryServiceImp implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryRequest createCategory(CategoryRequest categoryRequest) {
+    public CategoryRequest createCategory(CategoryRequest request) {
         // Check if the category already exists
         List<Category> existingCategories = categoryRepository.findAll();
+        System.out.println("Form Data Received on service imp: " + request.getName()+" / " + request.getDescription() + "/" + request.getIndexShow());
 
         for (Category category : existingCategories) {
-            if (category.getName().equalsIgnoreCase(categoryRequest.getName())) {
+            if (category.getName().equalsIgnoreCase(request.getName())) {
                 // Return a message if the category already exists
-                throw new CustomException("Category with the name '" + categoryRequest.getName() + "' already exists.");
+                throw new CustomException("Category with the name '" + request.getName() + "' already exists.");
             }
         }
 
         // Create a new Category if it doesn't exist
         Category newCategory = new Category();
-        newCategory.setName(categoryRequest.getName());
-        newCategory.setDescription(categoryRequest.getDescription());
+        newCategory.setName(request.getName());
+        newCategory.setDescription(request.getDescription());
         newCategory.setStatus("1");//1=active;0=dis-active
-        newCategory.setCreateBy(categoryRequest.getCreateBy());
+        newCategory.setCreateBy(request.getCreateBy());
         newCategory.setCreateDate(LocalDateTime.now());
-        newCategory.setIndexShow(categoryRequest.getIndexShow());
+        newCategory.setIndexShow(request.getIndexShow());
+
+        System.out.println("Form Data Received on newCategory imp: " + newCategory.getName()+" / " + newCategory.getDescription() + "/" + newCategory.getIndexShow());
+
         // Save the new category
         categoryRepository.save(newCategory);
 
-        return categoryRequest; // or convert and return the saved entity as needed
+        return request; // or convert and return the saved entity as needed
     }
 
     @Override
@@ -66,6 +70,28 @@ public class CatgoryServiceImp implements CategoryService {
 
         return categoryResponses;
     }
+
+    @Override
+    public List<CategoryResponse> getActiveCategories() {
+        List<Category> categories = categoryRepository.lstActiveCategory(); // Retrieve all categories from the repository
+        List<CategoryResponse> categoryResponses = new ArrayList<>();
+
+        for (Category category : categories) {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+            response.setStatus(category.getStatus());
+            response.setCreateDate(category.getCreateDate());
+            response.setIndexShow(category.getIndexShow());
+            // Set other necessary fields
+
+            categoryResponses.add(response);
+        }
+
+        return categoryResponses;
+    }
+
 
     @Override
     public Optional<CategoryResponse> getCategoryById(Long id) {
@@ -126,6 +152,11 @@ public class CatgoryServiceImp implements CategoryService {
         } else {
             throw new CustomException("Category not found with ID: " + id);
         }
+    }
+
+    public boolean isNameDuplicate(String name) {
+        // Check if the title exists in the database
+        return categoryRepository.existsByName(name);
     }
 
 }

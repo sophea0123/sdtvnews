@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -12,14 +14,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String email;
-    private String password;
+    private String firstName;
+    private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    private String userName;
+    private String passWord;
 
-    // Getters and Setters
+    private String status;
+
+    private int roleId;
+
+    private LocalDateTime createDate;
+    private String createBy;
+    private LocalDateTime deleteDate;
+    private String deleteBy;
+    private LocalDateTime updateDate;
+    private String updateBy;
+
 }
 

@@ -33,7 +33,5 @@ public class Role {
 
     private String updateBy;
 
-    @OneToMany(mappedBy = "role")
-    private List<User> users;
 
 }

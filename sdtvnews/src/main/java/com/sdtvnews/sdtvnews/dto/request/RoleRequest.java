@@ -30,6 +30,4 @@ public class RoleRequest {
     private LocalDateTime updateDate;
 
     private String updateBy;
-
-    private List<User> users;
 }

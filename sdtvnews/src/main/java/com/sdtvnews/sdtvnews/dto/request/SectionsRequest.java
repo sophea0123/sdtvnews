@@ -2,9 +2,11 @@ package com.sdtvnews.sdtvnews.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class SectionsRequest {
 
     private Long id;
@@ -21,5 +23,5 @@ public class SectionsRequest {
 
     private String deleteBy;
 
-    private int indexShow;
+    private String indexShow;
 }

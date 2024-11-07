@@ -1,9 +1,8 @@
 package com.sdtvnews.sdtvnews.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -23,5 +22,5 @@ public class CategoryRequest {
 
     private String deleteBy;
 
-    private int indexShow;
+    private String indexShow;
 }

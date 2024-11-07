@@ -8,9 +8,11 @@ import java.util.Optional;
 
 public interface CategoryService {
 
-    CategoryRequest createCategory(CategoryRequest categoryRequest);
+    CategoryRequest createCategory(CategoryRequest request);
 
     List<CategoryResponse>getAllCategories();
+
+    List<CategoryResponse>getActiveCategories();
 
     Optional<CategoryResponse>getCategoryById(Long id);
 
@@ -18,4 +20,5 @@ public interface CategoryService {
 
     void updateCategoryStatus(Long id, String status);
 
+    boolean isNameDuplicate(String name);
 }

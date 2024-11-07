@@ -33,5 +33,5 @@ public class Sections {
 
     private String updateBy;
 
-    private int indexShow;
+    private String indexShow;
 }

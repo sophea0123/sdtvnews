@@ -1,5 +1,7 @@
 package com.sdtvnews.sdtvnews.config.security;
 
+import com.sdtvnews.sdtvnews.config.EncryptionUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,17 +14,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomUserDetailsService customUserDetailsService;
+    private final PasswordEncoder passwordEncoder;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // Disable CSRF for testing; be careful with this in production
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+//                                .requestMatchers("/dashboard").hasAnyRole("USER", "ADMIN")
+//                                .anyRequest().permitAll()
                                 .requestMatchers("/login", "/resources/**", "/assets/**", "/api/**").permitAll()// Allow access to all assets
                                 .requestMatchers("/dashboard").hasAnyRole("ADMIN", "USER") // Allow access to both user and admin
                                 .anyRequest().authenticated()
@@ -36,43 +46,33 @@ public class SecurityConfig {
                 )
                 .logout(logout ->
                         logout
-                                .logoutUrl("/logout") // Set the logout URL
-                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))  // Allow GET for logout
-                                .logoutSuccessUrl("/login?logout=true") // Redirect to login page with logout message
-                                .invalidateHttpSession(true) // Invalidate the session
-                                .clearAuthentication(true) // Clear authentication
-                                .deleteCookies("JSESSIONID")  // Clear the session cookie
+                                .logoutUrl("/logout")
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                                .logoutSuccessUrl("/login?logout=true")
+                                .invalidateHttpSession(true)
+                                .clearAuthentication(true)
+                                .deleteCookies("JSESSIONID")
                                 .permitAll()
                 );
-
 
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Using BCrypt for password hashing
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
     }
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder
-                .authenticationProvider(daoAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
         return authenticationManagerBuilder.build();
     }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserDetailsService()); // Set your UserDetailsService
-        provider.setPasswordEncoder(passwordEncoder());
-        return provider;
-    }
-
-    @Bean
-    public CustomUserDetailsService customUserDetailsService() {
-        return new CustomUserDetailsService(passwordEncoder()); // Make sure to pass PasswordEncoder
-    }
 }
+
+

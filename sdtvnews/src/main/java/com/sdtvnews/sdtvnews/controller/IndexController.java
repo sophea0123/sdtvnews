@@ -1,11 +1,13 @@
 package com.sdtvnews.sdtvnews.controller;
 
+import com.sdtvnews.sdtvnews.config.security.CustomUserDetails;
+import com.sdtvnews.sdtvnews.entity.User;
+import com.sdtvnews.sdtvnews.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -30,6 +30,8 @@ public class IndexController {
 
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
@@ -46,18 +48,27 @@ public class IndexController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        // Retrieve the logged-in user's username from the security context
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        Optional<User> lstUser= userRepository.findById(userDetails.getId());
+        String fullName=lstUser.get().getFirstName()+" "+lstUser.get().getLastName();
+
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
         // Check for admin role
         boolean isAdmin = authorities.stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
 
-        model.addAttribute("username", username); // Add username to model
-        model.addAttribute("isAdmin",isAdmin);
+        System.out.println("isAdmin" +  isAdmin);
 
-        return "dashboard/index";  // Protected page after login
+        // Add username and admin status to the model
+        model.addAttribute("username", fullName);
+        model.addAttribute("isAdmin", isAdmin);
+
+        return "dashboard/index";  // Return the view for the dashboard
     }
 
     @PostMapping("/login")

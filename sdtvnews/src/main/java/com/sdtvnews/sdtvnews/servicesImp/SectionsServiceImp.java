@@ -71,7 +71,6 @@ public class SectionsServiceImp implements SectionsService {
     public Optional<SectionsResponse> getSectionsById(Long id) {
         // Retrieve the sections by its ID
         Optional<Sections> sectionsOptional = sectionsRepository.findById(id);
-
         // Check if the sections exists
         if (sectionsOptional.isPresent()) {
             // Convert Sections to SectionsResponse if it exists
@@ -84,7 +83,6 @@ public class SectionsServiceImp implements SectionsService {
             sectionsResponse.setCreateDate(sections.getCreateDate());
             sectionsResponse.setIndexShow(sections.getIndexShow());
             // Set other necessary fields
-
             return Optional.of(sectionsResponse);
         } else {
             // Return an empty Optional if the sections doesn't exist

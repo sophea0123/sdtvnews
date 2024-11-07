@@ -1,11 +1,15 @@
 package com.sdtvnews.sdtvnews.api;
 
 
+import com.sdtvnews.sdtvnews.config.TelegramService;
 import com.sdtvnews.sdtvnews.config.exception.ResponseDTO;
+import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
+import com.sdtvnews.sdtvnews.dto.request.TelegramRequest;
 import com.sdtvnews.sdtvnews.entity.NewsArticle;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +25,15 @@ import java.util.List;
 public class NewsArticleRestController {
 
     private final NewsArticleService newsArticleService;
+
+    @Autowired
+    private TelegramService telegramService;
+
+    @PostMapping("/send")
+    public String sendToTelegram(@RequestBody TelegramRequest telegramRequest) {
+        return telegramService.sendMessage(telegramRequest.getTitle() , telegramRequest.getUrl());
+    }
+
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
@@ -40,7 +53,7 @@ public class NewsArticleRestController {
 //            request.setUserId(Long.valueOf(userId));
 //            request.setScheduleDate(LocalDateTime.parse(scheduleDate, formatter));
 //            request.setScheduleStatus(Integer.valueOf(scheduleStatus));
-            request.setImages(images);
+            //request.setImages(images);
             NewsArticle createdArticle = newsArticleService.createArticle(request);
             return ResponseEntity.ok(new ResponseDTO<>("success", "News article created successfully", createdArticle));
         } catch (Exception e) {
@@ -52,7 +65,7 @@ public class NewsArticleRestController {
     // Get all news articles
     @GetMapping("/all")
     public ResponseEntity<?> getAllArticles() {
-        List<NewsArticle> articles = newsArticleService.getAllArticles();
+        List<ListArticleDTO> articles = newsArticleService.getAllArticles();
         return ResponseEntity.ok(new ResponseDTO<>("success", "List of news articles", articles));
     }
 

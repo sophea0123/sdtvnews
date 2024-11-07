@@ -32,5 +32,4 @@ public class RoleResponse {
 
     private String updateBy;
 
-    private List<User> users;
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,11 +16,26 @@ public class NewsArticle {
 
     private String title;
 
-    @Lob  // Large text data type
+    private int cateId;
+
+    @Lob
     private String content;  // Store the article text
 
-    @OneToMany(mappedBy = "newsArticle", cascade = CascadeType.ALL)
-    private List<Image> images;  // List of associated images
+    private LocalDateTime createDate;
+
+    private Long createBy;
+
+    private String status;
+
+    private String statusMarquee;// 0 = off ; 1=show
+
+    private Long updateStatusBy;
+
+    private LocalDateTime updateStatusDate;
+
+    private LocalDateTime updateDate;
+
+    private Long updateBy;
 
 }
 

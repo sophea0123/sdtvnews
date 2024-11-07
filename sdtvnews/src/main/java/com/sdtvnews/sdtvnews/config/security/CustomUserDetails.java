@@ -5,24 +5,29 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 public class CustomUserDetails implements UserDetails {
+    private Long id; // User ID
     private String username;
     private String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities; // Change to Collection
 
-    public CustomUserDetails(String username, String password, String role, Collection<? extends GrantedAuthority> authorities) {
+    // Constructor
+    public CustomUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.password = password;
-        // Set roles as GrantedAuthority
-        this.authorities = List.of(() -> role); // Convert role to GrantedAuthority
+        this.authorities = authorities;
     }
 
-    // Implement other UserDetails methods
+    public Long getId() {
+        return id; // Getter for the user ID
+    }
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -31,8 +36,8 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override

@@ -12,10 +12,14 @@ public interface RoleService {
 
     List<RoleResponse>getAllRole();
 
+    List<RoleResponse>getActiveRole();
+
     Optional<RoleResponse>getRoleById(Long id);
 
     void updateRole(Long id, RoleRequest request);
 
     void updateRoleStatus(Long id, String status);
+
+    boolean isNameDuplicate(String name);
 
 }

@@ -1,24 +1,27 @@
 package com.sdtvnews.sdtvnews.servicesImp;
 
 
+import com.sdtvnews.sdtvnews.config.CustomException;
+import com.sdtvnews.sdtvnews.config.EncryptionImageUtil;
+import com.sdtvnews.sdtvnews.config.EncryptionUtil;
+import com.sdtvnews.sdtvnews.config.ImageUtil;
+import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
-import com.sdtvnews.sdtvnews.entity.Image;
 import com.sdtvnews.sdtvnews.entity.NewsArticle;
-import com.sdtvnews.sdtvnews.repository.ImageRepository;
 import com.sdtvnews.sdtvnews.repository.NewsArticleRepository;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -26,51 +29,49 @@ import java.util.stream.Collectors;
 public class NewsArticleServiceImpl implements NewsArticleService {
 
     private final NewsArticleRepository newsArticleRepository;
-    private final ImageRepository imageRepository;
-
-    private final String UPLOAD_DIR = "D:/uploads/";
-
 
     public NewsArticle createArticle(NewsArticleRequest request) throws IOException {
+        String updatedContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle());
+
         // Create a new NewsArticle object
         NewsArticle article = new NewsArticle();
         article.setTitle(request.getTitle());
-        article.setContent(request.getContent());
-
-        // Handle file uploads and associate images
-        List<Image> images = new ArrayList<>();
-        for (MultipartFile file : request.getImages()) {
-            if (!file.isEmpty()) {
-                String fileName = file.getOriginalFilename();
-                Path filePath = Paths.get(UPLOAD_DIR + fileName);
-
-                // Save the file to the specified directory
-                Files.write(filePath, file.getBytes());
-
-                // Create an Image object and set its properties
-                Image image = new Image();
-                image.setImagePath(filePath.toString()); // or use fileName based on your requirements
-                image.setNewsArticle(article); // Associate the image with the article
-
-                // Add the image to the list
-                images.add(image);
-            }
-        }
-
-        // Set images to the article
-        article.setImages(images);
-
-        // Save all images in the database
-        imageRepository.saveAll(images); // Save images to the database
+        article.setContent(updatedContent);
+        article.setCateId(request.getCateId());
+        article.setCreateBy(request.getUserId());
+        article.setCreateDate(LocalDateTime.now());
+        article.setStatus("1");
+        article.setStatusMarquee(request.getStatusMarquee());
 
         // Finally, save the article
         return newsArticleRepository.save(article);
     }
 
+    public void updateSections(Long id, NewsArticleRequest request) throws IOException {
+        String updateContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle());
+
+        Optional<NewsArticle> newsArticle = newsArticleRepository.findById(id);
+
+        if (newsArticle.isPresent()) {
+            NewsArticle article = newsArticle.get();
+            // Update the article details
+            article.setTitle(request.getTitle());
+            article.setContent(updateContent);
+            article.setCateId(request.getCateId());
+            // Update the modification date if needed
+            //article.setUpdateDate(LocalDateTime.now());
+
+            // Save the updated article
+            newsArticleRepository.save(article);
+        } else {
+            throw new CustomException("Sections not found with ID: " + id);
+        }
+    }
+
 
     @Override
-    public List<NewsArticle> getAllArticles() {
-        return newsArticleRepository.findAll();
+    public List<ListArticleDTO> getAllArticles() {
+        return newsArticleRepository.lstNewsArticle();
     }
 
     @Override
@@ -78,6 +79,10 @@ public class NewsArticleServiceImpl implements NewsArticleService {
         return newsArticleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
     }
 
+    public boolean isTitleDuplicate(String title) {
+        // Check if the title exists in the database
+        return newsArticleRepository.existsByTitle(title);
+    }
     @Override
     public void deleteArticle(Long id) {
         newsArticleRepository.deleteById(id);

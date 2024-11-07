@@ -66,6 +66,27 @@ public class RoleServiceImp implements RoleService {
     }
 
     @Override
+    public List<RoleResponse> getActiveRole() {
+        List<Role> categories = roleRepository.lstActiveRole(); // Retrieve all role from the repository
+        List<RoleResponse> roleResponses = new ArrayList<>();
+
+        for (Role role : categories) {
+            RoleResponse response = new RoleResponse();
+            response.setId(role.getId());
+            response.setName(role.getName());
+            response.setDescription(role.getDescription());
+            response.setStatus(role.getStatus());
+            response.setCreateDate(role.getCreateDate());
+            // Set other necessary fields
+
+            roleResponses.add(response);
+        }
+
+        return roleResponses;
+    }
+
+
+    @Override
     public Optional<RoleResponse> getRoleById(Long id) {
         // Retrieve the role by its ID
         Optional<Role> roleOptional = roleRepository.findById(id);
@@ -122,6 +143,11 @@ public class RoleServiceImp implements RoleService {
         } else {
             throw new CustomException("Role not found with ID: " + id);
         }
+    }
+
+    public boolean isNameDuplicate(String name) {
+        // Check if the title exists in the database
+        return roleRepository.existsByName(name);
     }
 
 }

@@ -25,5 +25,5 @@ public class SectionsResponse {
 
     private String deleteBy;
 
-    private int indexShow;
+    private String indexShow;
 }
