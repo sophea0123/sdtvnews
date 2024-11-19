@@ -4,7 +4,7 @@ import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.dto.request.AdvertiseWithUsRequest;
 import com.sdtvnews.sdtvnews.dto.response.AdvertiseWithUsResponse;
 import com.sdtvnews.sdtvnews.entity.AdvertiseWithUs;
-import com.sdtvnews.sdtvnews.repository.AdvertiseWithUsRepository;
+import com.sdtvnews.sdtvnews.repository.AdsRepository;
 import com.sdtvnews.sdtvnews.services.AdvertiseWithUsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdvertiseWithUsServiceImp implements AdvertiseWithUsService {
 
-    private final AdvertiseWithUsRepository advertiseWithUsRepository;
+    private final AdsRepository advertiseWithUsRepository;
 
     @Override
     public AdvertiseWithUsRequest createAdvertiseWithUs(AdvertiseWithUsRequest advertiseWithUsRequest) {

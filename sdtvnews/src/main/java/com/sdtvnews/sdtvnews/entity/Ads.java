@@ -19,6 +19,12 @@ public class AdvertiseWithUs {
 
     private String description;
 
+    private String url;
+
+    private String image;
+
+    private String local;
+
     private String status;
 
     private LocalDateTime createDate;
@@ -33,5 +39,4 @@ public class AdvertiseWithUs {
 
     private String updateBy;
 
-    private int indexShow;
 }
