@@ -53,15 +53,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Category</h3>
+                        <h3 class="page-title">Ads</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Category</li>
+                            <li class="breadcrumb-item active">Ads</li>
                         </ul>
                     </div>
                     <div class="col-auto float-right ml-auto">
-                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_category">
-                            <i class="fa fa-plus"></i> Add Category</a>
+                        <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_ads">
+                            <i class="fa fa-plus"></i> Add Ads</a>
                     </div>
                 </div>
             </div>
@@ -74,9 +74,9 @@
                             <thead>
                             <tr>
                                 <th style="width: 30px;">#</th>
-                                <th>Category Name</th>
+                                <th>URL Name</th>
+                                <th>Local ADS</th>
                                 <th>Create Date</th>
-                                <th>Show Index</th>
                                 <th style="width: 150px;">Status</th>
                                 <th class="text-right" style="width: 30px;">Action</th>
                             </tr>
@@ -84,9 +84,13 @@
                             <tbody>
                                 <tr th:each="responses, iterStat : ${lstResponsesData}">
                                     <td th:text="${iterStat.index + 1}"></td> <!-- Display the index + 1 for numbering -->
-                                    <td th:text="${responses.name}"></td>
+
+                                    <td>
+                                        <a th:if="${#strings.isEmpty(responses.url)}" th:text="'N/A'"></a>
+                                        <a th:if="${!#strings.isEmpty(responses.url)}" th:href="${responses.url}" target="_blank" th:text="'Click Here'"></a>
+                                    </td>
+                                    <td th:text="${responses.local}"></td>
                                     <td th:text="${#temporals.format(responses.createDate, 'dd-MM-yyyy HH:mm a')}"></td>
-                                    <td th:text="${responses.indexShow}"></td>
                                     <td>
                                         <div class="dropdown action-label">
                                             <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
@@ -94,10 +98,10 @@
                                                 <span th:text="${responses.status == '1'} ? 'Active' : 'Inactive'"></span>
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" th:href="@{/category/activate/{id}(id=${responses.id})}">
+                                                <a class="dropdown-item" th:href="@{/ads/activate/{id}(id=${responses.id})}">
                                                     <i class="fa fa-dot-circle-o text-success"></i> Active
                                                 </a>
-                                                <a class="dropdown-item" th:href="@{/category/dis-activate/{id}(id=${responses.id})}">
+                                                <a class="dropdown-item" th:href="@{/ads/dis-activate/{id}(id=${responses.id})}">
                                                     <i class="fa fa-dot-circle-o text-danger"></i> Inactive
                                                 </a>
                                             </div>
@@ -110,8 +114,8 @@
                                                 <i class="material-icons">more_vert</i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item edit-category" href="#" data-toggle="modal"
-                                                   data-target="#edit_categorys" th:attr="data-id=${responses.id}">
+                                                <a class="dropdown-item edit-ads" href="#" data-toggle="modal"
+                                                   data-target="#edit_adss" th:attr="data-id=${responses.id}">
                                                     <i class="fa fa-pencil m-r-5"></i> Edit
                                                 </a>
                                             </div>
@@ -126,37 +130,38 @@
         </div>
         <!-- /Page Content -->
 
-        <!-- Add Category Modal -->
-        <div id="add_category" class="modal custom-modal fade" role="dialog">
+        <!-- Add Ads Modal -->
+        <div id="add_ads" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Category</h5>
+                        <h5 class="modal-title">Add Ads</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="@{/category/create}" method="POST">
+                        <form th:action="@{/ads/create}" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label>Category Name <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="name" name="name" required>
-                            </div>
-                            <!-- Message Display -->
-                            <div id="duplicateMessage" style="display:none; color:red;margin-bottom: 10px;">This name already exists.</div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea class="form-control" rows="3" name="description"></textarea>
+                                <label>URL Name</label>
+                                <input class="form-control" name="url" type="text" placeholder="www.url.com">
                             </div>
                             <div class="form-group">
-                                <label class="col-form-label">Index Show <span class="text-danger">*</span></label>
-                                <select class="select" name="indexShow" required>
-                                    <option>Show 1</option>
-                                    <option>Show 2</option>
-                                    <option>Show 3</option>
-                                    <option>Show 4</option>
-                                    <option>Show 5</option>
+                                <label>Local ADS <span class="text-danger">*</span></label>
+                                <select class="select" name="local" required>
+                                    <option value="" disabled selected>Select ADS</option>
+                                    <option value="Header Top">Header Top</option>
+                                    <option value="Content Top">Content Top</option>
+                                    <option value="Content Middle">Content Middle</option>
+                                    <option value="Content Bottom">Content Bottom</option>
+                                    <option value="Right Top">Right Top</option>
+                                    <option value="Right Middle">Right Middle</option>
+                                    <option value="Right Bottom">Right Bottom</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Image <span class="text-danger">*</span></label>
+                                <input class="form-control" type="file" accept="image/*" name="image" required>
                             </div>
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn" id="btn-submit">Submit</button>
@@ -166,39 +171,48 @@
                 </div>
             </div>
         </div>
-        <!-- /Add Category Modal -->
+        <!-- /Add Ads Modal -->
 
-        <!-- Edit Category Modal -->
-        <div id="edit_categorys" class="modal custom-modal fade" role="dialog">
+        <!-- Edit Ads Modal -->
+        <div id="edit_adss" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Category</h5>
+                        <h5 class="modal-title">Edit Ads</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="@{/category/update}" method="POST">
+                        <form th:action="@{/ads/update}" method="POST" enctype="multipart/form-data">
                             <input class="form-control"  name="id" type="hidden">
                             <input class="form-control"  name="status" type="hidden">
                             <div class="form-group">
-                                <label>Category Name <span class="text-danger">*</span></label>
-                                <input class="form-control"  name="name" type="text" required>
+                                <label>URL Name</label>
+                                <input class="form-control" name="url" type="text" placeholder="www.url.com">
                             </div>
                             <div class="form-group">
-                                <label>Description</label>
-                                <textarea class="form-control" rows="3" name="description"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Index Show <span class="text-danger">*</span></label>
-                                <select class="select" name="indexShow" required>
-                                    <option>Show 1</option>
-                                    <option>Show 2</option>
-                                    <option>Show 3</option>
-                                    <option>Show 4</option>
-                                    <option>Show 5</option>
+                                <label>Local ADS <span class="text-danger">*</span></label>
+                                <select class="select" name="local" id="localSelect" required>
+                                    <option value="Header Top">Header Top</option>
+                                    <option value="Content Top">Content Top</option>
+                                    <option value="Content Middle">Content Middle</option>
+                                    <option value="Content Bottom">Content Bottom</option>
+                                    <option value="Right Top">Right Top</option>
+                                    <option value="Right Middle">Right Middle</option>
+                                    <option value="Right Bottom">Right Bottom</option>
                                 </select>
+                            </div>
+                            <!-- Image Preview Section -->
+                            <div class="form-group">
+                                <label>Upload Image <span class="text-danger">*</span></label>
+                                <input class="form-control" type="file" accept="image/*" name="image">
+                            </div>
+                            <div class="form-group">
+                                <label>Current Image:</label>
+                                <div id="imagePreviewContainer">
+                                    <img id="imagePreview" src="" alt="Current Image" class="img-fluid" style="max-width: 100%; max-height: 200px;">
+                                </div>
                             </div>
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn">Save</button>
@@ -208,15 +222,15 @@
                 </div>
             </div>
         </div>
-        <!-- /Edit Category Modal -->
+        <!-- /Edit Ads Modal -->
 
-        <!-- Delete Category Modal -->
-        <div class="modal custom-modal fade" id="delete_category" role="dialog">
+        <!-- Delete Ads Modal -->
+        <div class="modal custom-modal fade" id="delete_ads" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-header">
-                            <h3>Delete Category</h3>
+                            <h3>Delete Ads</h3>
                             <p>Are you sure want to delete?</p>
                         </div>
                         <div class="modal-btn delete-action">
@@ -234,7 +248,21 @@
                 </div>
             </div>
         </div>
-        <!-- /Delete Category Modal -->
+        <!-- /Delete Ads Modal -->
+
+<!--        &lt;!&ndash; The Modal Image &ndash;&gt;-->
+<!--        <div class="modal custom-modal fade" id="image_ads" role="dialog">-->
+<!--            <div class="modal-dialog modal-dialog-centered modal-lg">-->
+<!--                <div class="modal-content">-->
+<!--                    <div class="modal-body">-->
+<!--                        &lt;!&ndash; Display Image Here &ndash;&gt;-->
+<!--                        <div class="image-preview">-->
+<!--                            <img id="adImage" src="" alt="Ad Image" class="img-fluid" style="max-width: 100%; max-height: 600px;">-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
     </div>
     <!-- /Page Wrapper -->
@@ -244,7 +272,7 @@
 <!-- jQuery -->
 <script th:replace="~{/dashboard/fragments/fragment :: scripts}"></script>
 <!-- jQuery -->
-<script th:src="@{/assets/js_dashboard/category.js}"></script>
+<script th:src="@{/assets/js_dashboard/ads.js}"></script>
 
 
 </body>

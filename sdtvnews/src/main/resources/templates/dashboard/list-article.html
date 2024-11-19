@@ -70,53 +70,69 @@
 					<!-- /Page Header -->
 					
 					<!-- Search Filter -->
-					<div class="row filter-row">
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<select class="select floating" name="cateId" required>
-									<option value="" disabled selected>User Name</option> <!-- Default empty option -->
-									<option th:each="user : ${lstUser}"
-											th:value="${user.id}"
-											th:text="${user.firstName + ' ' + user.lastName}">
-									</option>
-								</select>
-								<label class="focus-label">User Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus focused">
-								<div class="cal-icon">
-									<input class="form-control floating datetimepicker" type="text">
+					<form action="/article/lst/search" method="GET">
+						<div class="row filter-row">
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<div class="form-group form-focus select-focus">
+									<select class="select floating" name="userId">
+										<option value="" disabled selected>User Name</option>
+										<option th:each="user : ${lstUser}"
+												th:value="${user.id}"
+												th:text="${user.firstName + ' ' + user.lastName}"
+												th:selected="${user.id.toString() == userId}">
+										</option>
+									</select>
+									<label class="focus-label">User Name</label>
 								</div>
-								<label class="focus-label">From</label>
 							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus focused">
-								<div class="cal-icon">
-									<input class="form-control floating datetimepicker" type="text">
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<div class="form-group form-focus focused">
+									<input class="form-control floating datetimepicker"
+										   type="text"
+										   name="fromDate"
+										   th:value="${fromDate}" required>
+									<label class="focus-label">From</label>
 								</div>
-								<label class="focus-label">To</label>
+							</div>
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<div class="form-group form-focus focused">
+									<input class="form-control floating datetimepicker"
+										   type="text"
+										   name="toDate"
+										   th:value="${toDate}" required>
+									<label class="focus-label">To</label>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<div class="form-group form-focus select-focus">
+									<select class="select floating" name="categoryId">
+										<option value="" disabled selected>Select Category</option>
+										<option th:each="category : ${lstCategory}"
+												th:value="${category.id}"
+												th:text="${category.name}"
+												th:selected="${category.id.toString() == categoryId}">
+										</option>
+									</select>
+									<label class="focus-label">Category</label>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<div class="form-group form-focus select-focus">
+									<select class="select floating" name="marquee">
+										<option value="" disabled selected>Select Marquee</option>
+										<option value="1" th:selected="${marquee == '1'}">Show</option>
+										<option value="0" th:selected="${marquee == '0'}">Off</option>
+									</select>
+									<label class="focus-label">Marquee</label>
+								</div>
+							</div>
+							<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+								<button type="submit" class="btn btn-success btn-block">Search</button>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<select class="select floating" name="cateId" required>
-									<option value="" disabled selected>Select Category</option> <!-- Default empty option -->
-									<option th:each="category : ${lstCategory}"
-											th:value="${category.id}"
-											th:text="${category.name}">
-									</option>
-								</select>
-								<label class="focus-label">Category</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
-						</div>     
-                    </div>
+					</form>
+
 					<!-- /Search Filter -->
-					
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
@@ -142,10 +158,17 @@
 											</td>
 											<td class="text-center">
 												<div class="dropdown action-label">
-													<a href="" class="btn btn-white btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i> Active </a>
+													<a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+														<i class="fa" th:classappend="${responses.status == '1'} ? 'fa-dot-circle-o text-success' : 'fa-dot-circle-o text-danger'"></i>
+														<span th:text="${responses.status == '1'} ? 'Active' : 'Inactive'"></span>
+													</a>
 													<div class="dropdown-menu">
-														<a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-success"></i> Active</a>
-														<a class="dropdown-item" href="#"><i class="fa fa-dot-circle-o text-danger"></i> Inactive</a>
+														<a class="dropdown-item" th:href="@{/article/activate/{id}(id=${responses.id})}">
+															<i class="fa fa-dot-circle-o text-success"></i> Active
+														</a>
+														<a class="dropdown-item" th:href="@{/article/dis-activate/{id}(id=${responses.id})}">
+															<i class="fa fa-dot-circle-o text-danger"></i> Inactive
+														</a>
 													</div>
 												</div>
 											</td>

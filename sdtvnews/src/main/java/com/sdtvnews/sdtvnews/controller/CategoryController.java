@@ -3,8 +3,9 @@ package com.sdtvnews.sdtvnews.controller;
 import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
+import com.sdtvnews.sdtvnews.entity.Category;
+import com.sdtvnews.sdtvnews.repository.CategoryRepository;
 import com.sdtvnews.sdtvnews.services.CategoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @GetMapping("/index")
     public String indexPage(Model model) {
@@ -116,4 +120,27 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
+    // Get a list of all categories as JSON
+    @GetMapping("/list")
+    @ResponseBody
+    public List<CategoryResponse> getCategories() {
+        return categoryService.getByCategoriesASEC();  // Returns categories as JSON
+    }
+
+//    // Endpoint to move a category up or down
+//    @PostMapping("/move")
+//    @ResponseBody
+//    public void moveCategory(@RequestBody CategoryRequest request) {
+//        categoryService.moveCategory(request.getId(), request.getIndexShow(), request.getDirection());
+//    }
+
+    @PostMapping("/items/updateOrder")
+    @ResponseBody
+    public String updateOrder(@RequestBody List<Category> categories) {
+        for (Category item : categories) {
+            // Update only the orderIndex of the item
+            categoryRepository.updateOrderIndex(item.getId(), item.getIndexShow());
+        }
+        return "Order updated successfully!";
+    }
 }

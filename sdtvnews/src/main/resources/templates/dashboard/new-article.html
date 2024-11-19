@@ -66,7 +66,7 @@
 
 										</div>
 										<div class="form-group">
-											<textarea rows="4" class="form-control summernote" placeholder="Enter your message here" name="content" id="content"></textarea>
+											<textarea rows="10" class="form-control summernote" placeholder="Enter your message here" name="content" id="content"></textarea>
 										</div>
 										<div class="form-group">
 											<label class="d-block">Marquee:</label>
@@ -81,9 +81,9 @@
 										</div>
 										<div class="form-group mb-0">
 											<div class="text-center">
-												<button class="btn btn-primary" type="submit" id="btn-submit"><span>Submit</span> <i class="fa fa-send m-l-5"></i></button>
+												<button class="btn btn-primary" type="submit" id="btn-submit"><span>Save</span></button>
 												<button class="btn btn-success m-l-5" type="button" id="clearButton">
-													<span>Clear</span> <i class="fa fa-trash-o m-l-5"></i>
+													<span>Clear</span>
 												</button>
 											</div>
 										</div>
@@ -107,6 +107,11 @@
 		<script th:src="@{/assets/plugins/summernote/dist/summernote-bs4.min.js}"></script>
 		<script>
 			$(document).ready(function() {
+				// Create a style element
+				var style = '<style>.note-editable.card-block { height: 800px !important; }</style>';
+				// Append the style to the head
+				$('head').append(style);
+
 				$('#clearButton').click(function(event) {
 					location.reload();
 				});

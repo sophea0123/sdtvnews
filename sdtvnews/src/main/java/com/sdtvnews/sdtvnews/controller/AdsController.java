@@ -1,58 +1,52 @@
 package com.sdtvnews.sdtvnews.controller;
 
 import com.sdtvnews.sdtvnews.config.CustomException;
-import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
-import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
-import com.sdtvnews.sdtvnews.services.CategoryService;
-import lombok.RequiredArgsConstructor;
+import com.sdtvnews.sdtvnews.dto.request.AdsRequest;
+import com.sdtvnews.sdtvnews.dto.response.AdsResponse;
+import com.sdtvnews.sdtvnews.services.AdsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/category")
-public class CategoryController {
+@RequestMapping("/ads")
+public class AdsController {
 
     @Autowired
-    CategoryService categoryService;
+    AdsService adsService;
 
     @GetMapping("/index")
     public String indexPage(Model model) {
-
-        List<CategoryResponse>lstResponsesData= categoryService.getAllCategories();
-
+        List<AdsResponse>lstResponsesData= adsService.getAllAds();
         model.addAttribute("lstResponsesData",lstResponsesData);
-        return "dashboard/category";  // Return login page
+        return "dashboard/ads";
     }
 
-
     @PostMapping("/create")
-    public String createCategory(@ModelAttribute CategoryRequest request, RedirectAttributes redirectAttributes) {
+    public String createAds(@ModelAttribute AdsRequest request, RedirectAttributes redirectAttributes)throws IOException{
         try {
-            // Attempt to create the category
-            categoryService.createCategory(request);
-            redirectAttributes.addFlashAttribute("create", "Category created successfully!");
+            adsService.createAds(request);
+            redirectAttributes.addFlashAttribute("create", "Create ADS successfully!");
         } catch (CustomException e) {
-            // Handle the case where the category already exists or another error occurs
             redirectAttributes.addFlashAttribute("warning", e.getMessage());
         }
-        return "redirect:/category/index"; // Redirect to the category index page
+        return "redirect:/ads/index";
     }
 
     @GetMapping("/edit/{id}")
     @ResponseBody
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String id) {
+    public ResponseEntity<AdsResponse> getAdsById(@PathVariable String id) {
         try {
-            Optional<CategoryResponse> response = categoryService.getCategoryById(Long.valueOf(id));
+            Optional<AdsResponse> response = adsService.getAdsById(Long.valueOf(id));
             // Check if the response is present
             if (response.isPresent()) {
                 return ResponseEntity.ok(response.get()); // Return the found section
@@ -70,50 +64,41 @@ public class CategoryController {
     }
 
     @PostMapping("/update")
-    public String updateCategory(@ModelAttribute("category") CategoryRequest category, RedirectAttributes redirectAttributes) {
+    public String updateAds(@ModelAttribute AdsRequest ads,
+                            @RequestParam("image") MultipartFile imageFile,
+                            RedirectAttributes redirectAttributes) {
         try {
-            categoryService.updateCategory(Long.valueOf(category.getId()), category);
-            redirectAttributes.addFlashAttribute("update", "Category update successfully!");
-        } catch (CustomException e) {
+            adsService.updateAds(Long.valueOf(ads.getId()), ads,imageFile);
+            redirectAttributes.addFlashAttribute("update", "Ads update successfully!");
+        } catch (CustomException | IOException e) {
             // Handle the case where the section already exists
             redirectAttributes.addFlashAttribute("warning", e.getMessage()); // Add warning message
         }
-        return "redirect:/category/index"; // Redirect to the category page
+        return "redirect:/ads/index"; // Redirect to the ads page
     }
 
     @GetMapping("/activate/{id}")
-    public String activateCategory(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String activateAds(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("string id:" + id);
-            // Call your service to activate the section
-            categoryService.updateCategoryStatus(Long.valueOf(id),"1");
-            redirectAttributes.addFlashAttribute("active", "Category status activate updated successfully.");
+
+            adsService.updateAdsStatus(Long.valueOf(id),"1");
+            redirectAttributes.addFlashAttribute("active", "ADS status activate updated successfully.");
         } catch (CustomException e) {
             redirectAttributes.addFlashAttribute("error", "Failed to activate section: " + e.getMessage());
         }
-        return "redirect:/category/index"; // Redirect to the category index page
+        return "redirect:/ads/index"; // Redirect to the ads index page
     }
 
     @GetMapping("/dis-activate/{id}")
-    public String DisActivateCategory(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String DisActivateAds(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
             // Call your service to activate the section
-            categoryService.updateCategoryStatus(Long.valueOf(id),"0");
-            redirectAttributes.addFlashAttribute("active", "Category status dis-activate updated successfully.");
+            adsService.updateAdsStatus(Long.valueOf(id),"0");
+            redirectAttributes.addFlashAttribute("active", "ADS status dis-activate updated successfully.");
         } catch (CustomException e) {
             redirectAttributes.addFlashAttribute("error", "Failed to activate section: " + e.getMessage());
         }
-        return "redirect:/category/index"; // Redirect to the category index page
-    }
-
-    @GetMapping("/checkNameDuplicate")
-    public ResponseEntity<Map<String, Boolean>> checkTitleDuplicate(@RequestParam("name") String name) {
-        boolean isDuplicate = categoryService.isNameDuplicate(name); // Call service to check duplication
-
-        // Prepare response
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isDuplicate", isDuplicate);
-        return ResponseEntity.ok(response);
+        return "redirect:/ads/index"; // Redirect to the ads index page
     }
 
 }

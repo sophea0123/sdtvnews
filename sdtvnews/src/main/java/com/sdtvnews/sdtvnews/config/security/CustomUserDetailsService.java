@@ -3,7 +3,6 @@ package com.sdtvnews.sdtvnews.config.security;
 
 import com.sdtvnews.sdtvnews.config.EncryptionUtil;
 import com.sdtvnews.sdtvnews.config.RoleConstants;
-import com.sdtvnews.sdtvnews.dto.ListUserDTO;
 import com.sdtvnews.sdtvnews.entity.User;
 import com.sdtvnews.sdtvnews.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Map integer roles to GrantedAuthority
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (user.getRoleId() == 2) { // Assuming 0 is USER
+        if (user.getRoleId() == 2) { // Assuming 2 is USER
             authorities.add(new SimpleGrantedAuthority(RoleConstants.ROLE_USER));
         } else if (user.getRoleId() == 1) { // Assuming 1 is ADMIN
             authorities.add(new SimpleGrantedAuthority(RoleConstants.ROLE_ADMIN));

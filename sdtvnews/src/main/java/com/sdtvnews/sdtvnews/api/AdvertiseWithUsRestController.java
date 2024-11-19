@@ -3,9 +3,9 @@ package com.sdtvnews.sdtvnews.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.config.exception.ResponseDTO;
-import com.sdtvnews.sdtvnews.dto.request.AdvertiseWithUsRequest;
-import com.sdtvnews.sdtvnews.dto.response.AdvertiseWithUsResponse;
-import com.sdtvnews.sdtvnews.services.AdvertiseWithUsService;
+import com.sdtvnews.sdtvnews.dto.request.AdsRequest;
+import com.sdtvnews.sdtvnews.dto.response.AdsResponse;
+import com.sdtvnews.sdtvnews.services.AdsService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +28,16 @@ public class AdvertiseWithUsRestController {
     private static final Logger log = LoggerFactory.getLogger(AdvertiseWithUsRestController.class);
     private final ObjectMapper objectMapper;
 
-    private final AdvertiseWithUsService advertiseWithUsService;
+    private final AdsService advertiseWithUsService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createAdvertiseWithUs(@RequestBody AdvertiseWithUsRequest request) {
+    public ResponseEntity<?> createAds(@RequestBody AdsRequest request) {
         try {
-            log.info("Request to create AdvertiseWithUs: {}", objectMapper.writeValueAsString(request));
-            AdvertiseWithUsRequest createdAdvertiseWithUs = advertiseWithUsService.createAdvertiseWithUs(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO<>("success", "AdvertiseWithUs created successfully", createdAdvertiseWithUs));
+            log.info("Request to create Ads: {}", objectMapper.writeValueAsString(request));
+            AdsRequest createdAds = advertiseWithUsService.createAds(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO<>("success", "Ads created successfully", createdAds));
         } catch (CustomException e) {
-            log.warn("AdvertiseWithUs creation failed: {}", e.getMessage());
+            log.warn("Ads creation failed: {}", e.getMessage());
             return ResponseEntity.badRequest().body(new ResponseDTO<>("error", e.getMessage(), request));
         } catch (Exception e) {
             log.error("Error processing request: {}", e);
@@ -46,14 +46,14 @@ public class AdvertiseWithUsRestController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<?>> getAllAdvertiseWithUs() {
+    public ResponseEntity<ResponseDTO<?>> getAllAds() {
         try {
             log.info("Request to list all categories");
-            List<AdvertiseWithUsResponse> responseList = advertiseWithUsService.getAllAdvertiseWithUs();
+            List<AdsResponse> responseList = advertiseWithUsService.getAllAds();
             if (responseList.isEmpty()) {
                 return ResponseEntity.ok(new ResponseDTO<>("success", "No categories found.", responseList));
             }
-            return ResponseEntity.ok(new ResponseDTO<>("success", "AdvertiseWithUs retrieved successfully", responseList));
+            return ResponseEntity.ok(new ResponseDTO<>("success", "Ads retrieved successfully", responseList));
 
         } catch (Exception e) {
             log.error("Error processing request: {}", e);
@@ -62,18 +62,18 @@ public class AdvertiseWithUsRestController {
     }
 
     @RequestMapping(value = "/find", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<?>> getAdvertiseWithUsById(@RequestBody AdvertiseWithUsRequest request) {
+    public ResponseEntity<ResponseDTO<?>> getAdsById(@RequestBody AdsRequest request) {
         try {
-            log.info("Request to find AdvertiseWithUs: {}", objectMapper.writeValueAsString(request));
+            log.info("Request to find Ads: {}", objectMapper.writeValueAsString(request));
 
             // Retrieve advertiseWithUs by ID
-            Optional<AdvertiseWithUsResponse> response = advertiseWithUsService.getAdvertiseWithUsById(Long.valueOf(request.getId()));
+            Optional<AdsResponse> response = advertiseWithUsService.getAdsById(Long.valueOf(request.getId()));
 
             // Check if advertiseWithUs was found
             if (response.isPresent()) {
-                return ResponseEntity.ok(new ResponseDTO<>("success", "AdvertiseWithUs found by ID successfully", response.get()));
+                return ResponseEntity.ok(new ResponseDTO<>("success", "Ads found by ID successfully", response.get()));
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO<>("error", "AdvertiseWithUs not found.", null));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDTO<>("error", "Ads not found.", null));
             }
 
         } catch (CustomException e) {
@@ -85,28 +85,28 @@ public class AdvertiseWithUsRestController {
         }
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<?>> updateAdvertiseWithUs(@RequestBody AdvertiseWithUsRequest request) {
-        try {
-            log.info("Request to update AdvertiseWithUs: {}", objectMapper.writeValueAsString(request));
-            advertiseWithUsService.updateAdvertiseWithUs(Long.valueOf(request.getId()), request);
-            return ResponseEntity.ok(new ResponseDTO<>("success", "AdvertiseWithUs updated successfully", null));
-        } catch (CustomException e) {
-            log.warn("Error updating advertiseWithUs: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(new ResponseDTO<>("error", e.getMessage(), null));
-        } catch (Exception e) {
-            log.error("Error processing request: {}", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO<>("error", "An unexpected error occurred.", null));
-        }
-    }
+//    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<ResponseDTO<?>> updateAds(@RequestBody AdsRequest request) {
+//        try {
+//            log.info("Request to update Ads: {}", objectMapper.writeValueAsString(request));
+//            advertiseWithUsService.updateAds(Long.valueOf(request.getId()), request);
+//            return ResponseEntity.ok(new ResponseDTO<>("success", "Ads updated successfully", null));
+//        } catch (CustomException e) {
+//            log.warn("Error updating advertiseWithUs: {}", e.getMessage());
+//            return ResponseEntity.badRequest().body(new ResponseDTO<>("error", e.getMessage(), null));
+//        } catch (Exception e) {
+//            log.error("Error processing request: {}", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO<>("error", "An unexpected error occurred.", null));
+//        }
+//    }
 
 
     @RequestMapping(value = "/update-status", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<?>> updateAdvertiseWithUsStatus(@RequestBody AdvertiseWithUsRequest request) {
+    public ResponseEntity<ResponseDTO<?>> updateAdsStatus(@RequestBody AdsRequest request) {
         try {
-            log.info("Request to update status for AdvertiseWithUs ID: {}", request.getId());
-            advertiseWithUsService.updateAdvertiseWithUsStatus(request.getId(), request.getStatus());
-            return ResponseEntity.ok(new ResponseDTO<>("success", "AdvertiseWithUs status updated successfully.", null));
+            log.info("Request to update status for Ads ID: {}", request.getId());
+            advertiseWithUsService.updateAdsStatus(request.getId(), request.getStatus());
+            return ResponseEntity.ok(new ResponseDTO<>("success", "Ads status updated successfully.", null));
 
         } catch (CustomException e) {
             log.warn("Error updating advertiseWithUs status: {}", e.getMessage());

@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
+    @Query(value = "select count(*) from `user` u  where status ='1'",nativeQuery = true)
+    int countUser();
 
     @Query(value = "select * from `user` u where u.status='1' and user_name=:username",nativeQuery = true)
     User findByUserNameLogin(String username);

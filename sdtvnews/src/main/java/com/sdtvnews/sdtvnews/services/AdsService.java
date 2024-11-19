@@ -1,21 +1,24 @@
 package com.sdtvnews.sdtvnews.services;
 
-import com.sdtvnews.sdtvnews.dto.request.AdvertiseWithUsRequest;
-import com.sdtvnews.sdtvnews.dto.response.AdvertiseWithUsResponse;
+import com.sdtvnews.sdtvnews.dto.request.AdsRequest;
+import com.sdtvnews.sdtvnews.dto.response.AdsResponse;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public interface AdvertiseWithUsService {
+public interface AdsService {
 
-    AdvertiseWithUsRequest createAdvertiseWithUs(AdvertiseWithUsRequest request);
+    AdsRequest createAds(AdsRequest request)throws IOException;
 
-    List<AdvertiseWithUsResponse>getAllAdvertiseWithUs();
+    List<AdsResponse>getAllAds();
 
-    Optional<AdvertiseWithUsResponse>getAdvertiseWithUsById(Long id);
+    Optional<AdsResponse>getAdsById(Long id);
 
-    void updateAdvertiseWithUs(Long id, AdvertiseWithUsRequest request);
+    void updateAds(Long id, AdsRequest advertiseWithUsRequest, MultipartFile imageFile) throws IOException;
 
-    void updateAdvertiseWithUsStatus(Long id, String status);
+    void updateAdsStatus(Long id, String status);
 
+    String saveImage(MultipartFile imageFile) throws IOException;
 }

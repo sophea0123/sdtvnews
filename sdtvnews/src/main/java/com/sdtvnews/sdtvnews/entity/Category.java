@@ -32,5 +32,5 @@ public class Category {
 
     private String updateBy;
 
-    private String indexShow;
+    private int indexShow;
 }

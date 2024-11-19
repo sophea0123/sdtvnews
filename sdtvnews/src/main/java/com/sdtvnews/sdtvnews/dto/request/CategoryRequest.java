@@ -22,5 +22,7 @@ public class CategoryRequest {
 
     private String deleteBy;
 
-    private String indexShow;
+    private int indexShow;
+
+    private String direction;
 }

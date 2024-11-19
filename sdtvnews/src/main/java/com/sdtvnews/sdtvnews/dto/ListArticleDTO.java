@@ -9,5 +9,6 @@ public interface ListArticleDTO {
     LocalDateTime getCreateDate();
     String getName();
     String getFullName();
+    String getStatus();
 
 }

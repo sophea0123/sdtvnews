@@ -21,4 +21,9 @@ public interface CategoryService {
     void updateCategoryStatus(Long id, String status);
 
     boolean isNameDuplicate(String name);
+
+    void moveCategory(Long categoryId, int index, String direction);
+
+    List<CategoryResponse> getByCategoriesASEC();
+
 }

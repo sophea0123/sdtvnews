@@ -2,24 +2,34 @@ package com.sdtvnews.sdtvnews.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class AdvertiseWithUsRequest {
+public class AdsRequest {
 
     private Long id;
 
-    private String name;
+    private String url;
 
-    private String description;
+    private MultipartFile image;
+
+    private String local;
 
     private String status;
 
+    private LocalDateTime createDate;
+
     private String createBy;
 
-    private String updateBy;
+    private LocalDateTime deleteDate;
 
     private String deleteBy;
 
-    private int indexShow;
+    private LocalDateTime updateDate;
+
+    private String updateBy;
+
 }

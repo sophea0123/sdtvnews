@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +68,28 @@ public class CatgoryServiceImp implements CategoryService {
 
         return categoryResponses;
     }
+
+    @Override
+    public List<CategoryResponse> getByCategoriesASEC() {
+        List<Category> categories = categoryRepository.lstBySortCategory(); // Retrieve all categories from the repository
+        List<CategoryResponse> categoryResponses = new ArrayList<>();
+
+        for (Category category : categories) {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            response.setDescription(category.getDescription());
+            response.setStatus(category.getStatus());
+            response.setCreateDate(category.getCreateDate());
+            response.setIndexShow(category.getIndexShow());
+            // Set other necessary fields
+
+            categoryResponses.add(response);
+        }
+
+        return categoryResponses;
+    }
+
 
     @Override
     public List<CategoryResponse> getActiveCategories() {
@@ -140,7 +160,6 @@ public class CatgoryServiceImp implements CategoryService {
         }
     }
 
-
     @Override
     public void updateCategoryStatus(Long id, String status) {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
@@ -157,6 +176,29 @@ public class CatgoryServiceImp implements CategoryService {
     public boolean isNameDuplicate(String name) {
         // Check if the title exists in the database
         return categoryRepository.existsByName(name);
+    }
+
+    // Move a category up or down
+    public void moveCategory(Long categoryId, int currentIndex, String direction) {
+        List<Category> categories = categoryRepository.lstBySortCategory();
+        Category categoryToMove = categories.stream()
+                .filter(c -> c.getId().equals(categoryId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        // Move logic
+        int targetIndex = direction.equals("up") ? currentIndex - 1 : currentIndex + 1;
+
+        if (targetIndex < 0 || targetIndex >= categories.size()) {
+            throw new RuntimeException("Invalid move operation");
+        }
+
+        // Swap the category's index with the target index
+        Category targetCategory = categories.get(targetIndex);
+        categoryToMove.setIndexShow(targetIndex);
+        targetCategory.setIndexShow(currentIndex);
+
+        categoryRepository.saveAll(Arrays.asList(categoryToMove, targetCategory));
     }
 
 }

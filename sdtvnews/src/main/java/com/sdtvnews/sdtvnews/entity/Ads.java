@@ -3,21 +3,18 @@ package com.sdtvnews.sdtvnews.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "advertise_with_us")
-public class AdvertiseWithUs {
+@Table(name = "ads")
+public class Ads {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-
-    private String description;
 
     private String url;
 

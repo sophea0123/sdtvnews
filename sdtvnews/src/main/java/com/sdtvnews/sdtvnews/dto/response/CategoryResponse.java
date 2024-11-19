@@ -25,5 +25,5 @@ public class CategoryResponse {
 
     private String deleteBy;
 
-    private String indexShow;
+    private int indexShow;
 }

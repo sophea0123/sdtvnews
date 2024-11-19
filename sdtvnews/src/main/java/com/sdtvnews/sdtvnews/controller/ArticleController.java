@@ -1,5 +1,6 @@
 package com.sdtvnews.sdtvnews.controller;
 
+import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.config.security.CustomUserDetails;
 import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
@@ -9,7 +10,6 @@ import com.sdtvnews.sdtvnews.entity.NewsArticle;
 import com.sdtvnews.sdtvnews.services.CategoryService;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import com.sdtvnews.sdtvnews.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +53,13 @@ public class ArticleController {
         model.addAttribute("lstUser",lstUser);
         model.addAttribute("lstdata",lstdata);
 
-        return "dashboard/list-article";  // Return login page
+        return "dashboard/list-article";
     }
 
     @GetMapping("/find-by/{id}")
     public String findById(@PathVariable String id, Model model) {
         NewsArticle lstdata = newsArticleService.getArticleById(Long.valueOf(id));
         List<CategoryResponse>lstCategory= categoryService.getActiveCategories();
-
-
         model.addAttribute("lstCategory",lstCategory);
         model.addAttribute("categoryId", lstdata.getCateId());
         model.addAttribute("lstdata",lstdata);
@@ -107,11 +107,78 @@ public class ArticleController {
     @GetMapping("/checkTitleDuplicate")
     public ResponseEntity<Map<String, Boolean>> checkTitleDuplicate(@RequestParam("title") String title) {
         boolean isDuplicate = newsArticleService.isTitleDuplicate(title); // Call service to check duplication
-
         // Prepare response
         Map<String, Boolean> response = new HashMap<>();
         response.put("isDuplicate", isDuplicate);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/activate/{id}")
+    public String activateAds(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        try {
+            newsArticleService.updateArticleStatus(Long.valueOf(id),"1");
+            redirectAttributes.addFlashAttribute("active", "Article status activate updated successfully.");
+        } catch (CustomException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to activate section: " + e.getMessage());
+        }
+        return "redirect:/article/list-article"; // Redirect to the  index page
+    }
+
+    @GetMapping("/dis-activate/{id}")
+    public String DisActivateAds(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        try {
+            // Call your service to activate the section
+            newsArticleService.updateArticleStatus(Long.valueOf(id),"0");
+            redirectAttributes.addFlashAttribute("active", "Article status dis-activate updated successfully.");
+        } catch (CustomException e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to activate section: " + e.getMessage());
+        }
+        return "redirect:/article/list-article"; // Redirect to the  index page
+    }
+
+    @GetMapping("/lst/search")
+    public String listSearch(
+            Model model,
+            @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "fromDate", required = false) String fromDate,
+            @RequestParam(value = "toDate", required = false) String toDate,
+            @RequestParam(value = "categoryId", required = false) String categoryId,
+            @RequestParam(value = "marquee", required = false) String marquee) {
+
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String fromDateConvert = null;
+        String toDateConvert = null;
+
+        // Convert fromDate if not null
+        if (fromDate != null && !fromDate.isEmpty()) {
+            LocalDate fromDateParsed = LocalDate.parse(fromDate, inputFormatter);
+            fromDateConvert = fromDateParsed.format(outputFormatter);
+        }
+
+        // Convert toDate if not null
+        if (toDate != null && !toDate.isEmpty()) {
+            LocalDate toDateParsed = LocalDate.parse(toDate, inputFormatter);
+            toDateConvert = toDateParsed.format(outputFormatter);
+        }
+
+        List<ListArticleDTO>lstdata = newsArticleService.getSearchArticles(userId,fromDateConvert,toDateConvert,categoryId,marquee);
+
+        List<CategoryResponse>lstCategory= categoryService.getActiveCategories();
+        List<UserResponse>lstUser= userService.getActiveUser();
+
+        model.addAttribute("lstCategory",lstCategory);
+        model.addAttribute("lstUser",lstUser);
+        model.addAttribute("userId", userId);
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("marquee", marquee);
+
+        model.addAttribute("lstdata",lstdata);
+        // Handle search logic using query parameters
+        return "dashboard/list-article";
     }
 
 }

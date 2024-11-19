@@ -2,18 +2,20 @@ package com.sdtvnews.sdtvnews.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class AdvertiseWithUsResponse {
-
+public class AdsResponse {
     private Long id;
 
-    private String name;
+    private String url;
 
-    private String description;
+    private String image;
+
+    private String local;
 
     private String status;
 
@@ -25,5 +27,8 @@ public class AdvertiseWithUsResponse {
 
     private String deleteBy;
 
-    private int indexShow;
+    private LocalDateTime updateDate;
+
+    private String updateBy;
+
 }
