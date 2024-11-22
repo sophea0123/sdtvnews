@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="~{/dashboard/fragments/fragment :: head}"></head>
+<head th:replace="~{/dashboard/fragments/fragment :: head}">
+
+    <!-- jQuery Library -->
+    <script th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"></script>
+    <!-- jQuery UI Library -->
+    <script th:src="@{https://code.jquery.com/ui/1.13.2/jquery-ui.min.js}"></script>
+
+
+
+</head>
 
 <body>
 <!-- Main Wrapper -->
@@ -67,244 +76,32 @@
             </div>
             <!-- /Page Header -->
             <div class="row">
-                <div class="contact-cat col-sm-4 col-lg-3">
-                    <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#add_contact"><i class="fa fa-plus"></i> Add Contact</a>
-                    <div class="roles-menu">
-                        <ul>
-                            <li class="active"><a href="javascript:void(0);">All</a></li>
-                            <li><a href="#">Company</a></li>
-                            <li><a href="#">Client</a></li>
-                            <li><a href="#">Staff</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="contacts-list col-sm-8 col-lg-9">
-                    <ul class="contact-list">
-                        <li>sads
+                <div class="col-md-12">
+                    <ul id="sortable" class="contact-list">
+                        <li th:each="responses : ${lstResponsesData}">
                             <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-02.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
                                 <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">John Doe</span>
-                                    <span class="contact-date">Web Developer</span>
+                                    <span class="contact-name text-ellipsis" th:text="${responses.name}"></span>
+                                    <span class="contact-date" th:text="${responses.description}"></span>
                                 </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-09.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Richard Miles</span>
-                                    <span class="contact-date">Web Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-10.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">John Smith</span>
-                                    <span class="contact-date">Android Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-05.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Mike Litorus</span>
-                                    <span class="contact-date">IOS Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-11.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Wilmer Deluna</span>
-                                    <span class="contact-date">Team Leader</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-12.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Jeffrey Warden</span>
-                                    <span class="contact-date">Web Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-13.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Bernardo Galaviz</span>
-                                    <span class="contact-date">Web Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-01.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Lesley Grauer</span>
-                                    <span class="contact-date">Team Leader</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-16.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Jeffery Lalor</span>
-                                    <span class="contact-date">Team Leader</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="contact-cont">
-                                <div class="float-left user-img">
-                                    <a href="profile.html" class="avatar">
-                                        <img class="rounded-circle" alt="" src="assets/img/profiles/avatar-16.jpg">
-                                        <span class="status online"></span>
-                                    </a>
-                                </div>
-                                <div class="contact-info">
-                                    <span class="contact-name text-ellipsis">Loren Gatlin</span>
-                                    <span class="contact-date">Android Developer</span>
-                                </div>
-                                <ul class="contact-action">
-                                    <li class="dropdown dropdown-action">
-                                        <a href="" class="dropdown-toggle action-icon" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#edit_contact">Edit</a>
-                                            <a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#delete_contact">Delete</a>
+                                <ul class="contact-action ">
+                                    <!-- Status Dropdown -->
+                                    <li class="dropdown action-label" style="float:right">
+                                        <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa" th:classappend="${responses.status == '1'} ? 'fa-dot-circle-o text-success' : 'fa-dot-circle-o text-danger'"></i>
+                                            <span th:text="${responses.status == '1'} ? 'Active' : 'Inactive'"></span>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" th:href="@{/category/activate/{id}(id=${responses.id})}">
+                                                <i class="fa fa-dot-circle-o text-success"></i> Active
+                                            </a>
+                                            <a class="dropdown-item" th:href="@{/category/dis-activate/{id}(id=${responses.id})}">
+                                                <i class="fa fa-dot-circle-o text-danger"></i> Inactive
+                                            </a>
+                                            <a class="dropdown-item edit-category" href="#" data-toggle="modal"
+                                               data-target="#edit_categorys" th:attr="data-id=${responses.id}">
+                                                <i class="fa fa-pencil text-primary"></i> Edit
+                                            </a>
                                         </div>
                                     </li>
                                 </ul>
@@ -340,16 +137,6 @@
                                 <label>Description</label>
                                 <textarea class="form-control" rows="3" name="description"></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Index Show <span class="text-danger">*</span></label>
-                                <select class="select" name="indexShow" required>
-                                    <option>Show 1</option>
-                                    <option>Show 2</option>
-                                    <option>Show 3</option>
-                                    <option>Show 4</option>
-                                    <option>Show 5</option>
-                                </select>
-                            </div>
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn" id="btn-submit">Submit</button>
                             </div>
@@ -373,6 +160,7 @@
                     <div class="modal-body">
                         <form th:action="@{/category/update}" method="POST">
                             <input class="form-control"  name="id" type="hidden">
+                            <input class="form-control"  name="indexShow" type="hidden">
                             <input class="form-control"  name="status" type="hidden">
                             <div class="form-group">
                                 <label>Category Name <span class="text-danger">*</span></label>
@@ -381,16 +169,6 @@
                             <div class="form-group">
                                 <label>Description</label>
                                 <textarea class="form-control" rows="3" name="description"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-form-label">Index Show <span class="text-danger">*</span></label>
-                                <select class="select" name="indexShow" required>
-                                    <option>Show 1</option>
-                                    <option>Show 2</option>
-                                    <option>Show 3</option>
-                                    <option>Show 4</option>
-                                    <option>Show 5</option>
-                                </select>
                             </div>
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn">Save</button>
@@ -438,68 +216,12 @@
 <!-- jQuery -->
 <script th:src="@{/assets/js_dashboard/category.js}"></script>
 <script>
-    $(document).ready(function() {
+    $(function () {
+      $("#sortable").sortable();
+      $("#sortable").disableSelection();
 
-         $.get("/category/list", function (data) {
-            // Clear existing list (if any)
-            $("#categoryList").empty();
-
-            // Iterate through the JSON response and create list items
-            data.forEach(function (category) {
-                $("#categoryList").append(`<li data-id="${category.id}">${category.name}</li>`);
-            });
-         }).fail(function () {
-            alert("Failed to load categories. Please try again.");
-         });
-
-         $("#saveOrder").on("click", function () {
-            let updatedOrder = [];
-            $("#categoryList li").each(function (index) {
-                updatedOrder.push({
-                    id: $(this).data("id"),
-                    orderIndex: index + 1
-                });
-            });
-
-            $.ajax({
-                url: "/categories/updateOrder",
-                method: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(updatedOrder),
-                success: function () {
-                    alert("Order updated successfully!");
-                },
-                error: function () {
-                    alert("Failed to update order.");
-                }
-            });
-        });
-
-
-
-      // Show the submenu when the parent menu item is hovered over
-      $('#main-nav > li').hover(
-        function() {
-          // On mouse enter, show the submenu
-          $(this).children('.submenu').stop(true, true).slideDown(200);
-        },
-        function() {
-          // On mouse leave, hide the submenu
-          $(this).children('.submenu').stop(true, true).slideUp(200);
-        }
-      );
-
-      // Alternatively, for clicking to show submenu
-      $('#main-nav > li > a').click(function(e) {
-        var $submenu = $(this).siblings('.submenu');
-        if ($submenu.length > 0) {
-          e.preventDefault(); // Prevent navigation if submenu exists
-          $submenu.stop(true, true).slideToggle(200);
-        }
-      });
     });
 </script>
-
 
 </body>
 </html>

@@ -9,6 +9,26 @@ import java.util.List;
 
 public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
 
+    @Query(value = "SELECT \n" +
+            "    na.id,\n" +
+            "    na.title,\n" +
+            "    na.create_date,\n" +
+            "    c.name,\n" +
+            "    na.status,\n" +
+            "    CONCAT(u.first_name, ' ', u.last_name) AS full_name\n" +
+            "FROM \n" +
+            "    news_article na\n" +
+            "INNER JOIN \n" +
+            "    category c \n" +
+            "    ON na.cate_id = c.id\n" +
+            "INNER JOIN \n" +
+            "    `user` u \n" +
+            "    ON na.create_by = u.id\n" +
+            "WHERE na.title LIKE :keyWord \n" +
+            "ORDER BY \n" +
+            "    na.create_date DESC;" ,nativeQuery = true)
+    List<ListArticleDTO>listArticleBySearch(String keyWord);
+
     @Query(value = "select count(*) from news_article na where status ='1'",nativeQuery = true)
     int countArticle();
 
@@ -38,7 +58,6 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
             "    where DATE(na.create_date) BETWEEN :fromDate AND :toDate \n" +
             "    order by na.create_date desc",nativeQuery = true)
     List<ListArticleDTO>lstNewsArticleByCreateDate(String fromDate,String toDate);
-
 
     @Query(value = "select\n" +
             "\t\tna.id,\n" +

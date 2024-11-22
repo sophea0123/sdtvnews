@@ -1,12 +1,14 @@
 package com.sdtvnews.sdtvnews.servicesImp;
 
 import com.sdtvnews.sdtvnews.config.CustomException;
+import com.sdtvnews.sdtvnews.config.GetUserAccess;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
 import com.sdtvnews.sdtvnews.entity.Category;
 import com.sdtvnews.sdtvnews.repository.CategoryRepository;
 import com.sdtvnews.sdtvnews.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,20 +19,20 @@ import java.util.*;
 public class CatgoryServiceImp implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    @Autowired
+    GetUserAccess getUserAccess;
 
     @Override
     public CategoryRequest createCategory(CategoryRequest request) {
         // Check if the category already exists
         List<Category> existingCategories = categoryRepository.findAll();
-        System.out.println("Form Data Received on service imp: " + request.getName()+" / " + request.getDescription() + "/" + request.getIndexShow());
-
         for (Category category : existingCategories) {
             if (category.getName().equalsIgnoreCase(request.getName())) {
                 // Return a message if the category already exists
                 throw new CustomException("Category with the name '" + request.getName() + "' already exists.");
             }
         }
-
+        int countIndex=existingCategories.size() + 1;
         // Create a new Category if it doesn't exist
         Category newCategory = new Category();
         newCategory.setName(request.getName());
@@ -38,19 +40,16 @@ public class CatgoryServiceImp implements CategoryService {
         newCategory.setStatus("1");//1=active;0=dis-active
         newCategory.setCreateBy(request.getCreateBy());
         newCategory.setCreateDate(LocalDateTime.now());
-        newCategory.setIndexShow(request.getIndexShow());
-
-        System.out.println("Form Data Received on newCategory imp: " + newCategory.getName()+" / " + newCategory.getDescription() + "/" + newCategory.getIndexShow());
-
+        newCategory.setIndexShow(countIndex);
+        newCategory.setCreateBy(String.valueOf(getUserAccess.getUserAccess().getId()));
         // Save the new category
         categoryRepository.save(newCategory);
-
         return request; // or convert and return the saved entity as needed
     }
 
     @Override
     public List<CategoryResponse> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll(); // Retrieve all categories from the repository
+        List<Category> categories = categoryRepository.lstBySortCategory(); // Retrieve all categories from the repository
         List<CategoryResponse> categoryResponses = new ArrayList<>();
 
         for (Category category : categories) {
@@ -62,7 +61,6 @@ public class CatgoryServiceImp implements CategoryService {
             response.setCreateDate(category.getCreateDate());
             response.setIndexShow(category.getIndexShow());
             // Set other necessary fields
-
             categoryResponses.add(response);
         }
 
@@ -150,7 +148,7 @@ public class CatgoryServiceImp implements CategoryService {
             category.setDescription(categoryRequest.getDescription());
             category.setStatus(categoryRequest.getStatus());
             category.setIndexShow(categoryRequest.getIndexShow());
-            category.setUpdateBy(categoryRequest.getUpdateBy());
+            category.setUpdateBy(String.valueOf(getUserAccess.getUserAccess().getId()));
             category.setUpdateDate(LocalDateTime.now());
 
             // Save the updated category

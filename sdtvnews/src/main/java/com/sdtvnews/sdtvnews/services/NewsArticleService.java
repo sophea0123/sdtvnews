@@ -14,6 +14,8 @@ public interface NewsArticleService {
 
     List<ListArticleDTO> getAllArticles();
 
+    List<ListArticleDTO> getAllArticlesSearch(String keyWord);
+
     List<ListArticleDTO> getSearchArticles(String userId, String fromDate, String toDate,String categoryId,String marquee);
 
     NewsArticle getArticleById(Long id);

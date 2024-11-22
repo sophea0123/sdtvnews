@@ -10,6 +10,7 @@ import com.sdtvnews.sdtvnews.entity.NewsArticle;
 import com.sdtvnews.sdtvnews.services.CategoryService;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import com.sdtvnews.sdtvnews.services.UserService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -55,6 +56,18 @@ public class ArticleController {
 
         return "dashboard/list-article";
     }
+
+    @GetMapping("/list-article-search")
+    public String listArticleSearch(@RequestParam("keyWord") String keyWord,Model model) {
+        List<ListArticleDTO>lstdata = newsArticleService.getAllArticlesSearch(keyWord);
+        int count = lstdata.size();
+        model.addAttribute("lstdata",lstdata);
+        model.addAttribute("keyWord",keyWord);
+        model.addAttribute("count",count);
+
+        return "dashboard/list-article-search";
+    }
+
 
     @GetMapping("/find-by/{id}")
     public String findById(@PathVariable String id, Model model) {

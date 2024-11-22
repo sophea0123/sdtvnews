@@ -89,6 +89,12 @@ public class NewsArticleServiceImpl implements NewsArticleService {
     }
 
     @Override
+    public List<ListArticleDTO> getAllArticlesSearch(String keyWord) {
+        String keyWordConcate = "%" + keyWord + "%";
+        return newsArticleRepository.listArticleBySearch(keyWordConcate);
+    }
+
+    @Override
     public List<ListArticleDTO> getSearchArticles(String userId, String fromDate, String toDate,String categoryId,String marquee) {
         List<ListArticleDTO> listSearchArticleDTOS = new ArrayList<>();
         if (userId != null && categoryId != null && marquee != null) {
