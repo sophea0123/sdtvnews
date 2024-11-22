@@ -9,15 +9,14 @@ import com.sdtvnews.sdtvnews.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/user")
@@ -33,6 +32,15 @@ public class UserController {
 
         List<UserResponse>lstResponsesData= userService.getAllUser();
         List<RoleResponse>roleResponses=roleService.getActiveRole();
+
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+        System.out.println(isAdmin);
 
         model.addAttribute("lstResponsesData",lstResponsesData);
         model.addAttribute("roleResponses",roleResponses);
@@ -114,7 +122,6 @@ public class UserController {
     @GetMapping("/checkNameDuplicate")
     public ResponseEntity<Map<String, Boolean>> checkTitleDuplicate(@RequestParam("username") String username) {
         boolean isDuplicate = userService.isNameDuplicate(username); // Call service to check duplication
-
         // Prepare response
         Map<String, Boolean> response = new HashMap<>();
         response.put("isDuplicate", isDuplicate);

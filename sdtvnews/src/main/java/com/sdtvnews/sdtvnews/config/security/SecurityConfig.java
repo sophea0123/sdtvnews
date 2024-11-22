@@ -4,6 +4,7 @@ import com.sdtvnews.sdtvnews.config.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -32,10 +33,14 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests
-                                .requestMatchers("/login", "/resources/**", "/assets/**", "/api/**").permitAll()// Allow access to all assets
+                                .requestMatchers("/login","/index","/index/**", "/resources/**", "/assets/**"
+                                        ,"/assets_frontend/**", "/api/**","/ads-image/**").permitAll()// Allow access to all assets
                                 .requestMatchers("/dashboard").hasAnyRole("ADMIN", "USER") // Allow access to both user and admin
+                                 .requestMatchers("/category/**","/ads/**","/user/**","/role/**","/client/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
+
                 )
+
                 .formLogin(formLogin ->
                         formLogin
                                 .loginPage("/login")

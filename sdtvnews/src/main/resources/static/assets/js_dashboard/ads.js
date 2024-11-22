@@ -1,14 +1,4 @@
 $(document).ready(function () {
-//    // When the image thumbnail is clicked
-//    $('.adImageThumbnail').click(function() {
-//        // Get the src of the clicked image
-//        var imageUrl = $(this).attr('src');
-//        // Set the image in the modal
-//        $('#adImage').attr('src', imageUrl);
-//        // Show the modal
-//        $('#image_ads').modal('show');
-//    });
-
 	$('#tableReponse tbody').on('click', '.edit-ads', function () {
 		var adsId = $(this).data('id'); // Get the ads ID from data attribute
 		$.ajax({
@@ -23,9 +13,9 @@ $(document).ready(function () {
                 $('#localSelect').val(data.local.trim()).trigger('change');
                 // Update image preview if the ad has an image
                 if (data.image) {
-                    $('#imagePreview').attr('src', '/ads/' + data.image); // Update the image preview
+                    $('#imagePreview').attr('src', '/ads-image/' + data.image); // Update the image preview
                 } else {
-                    $('#imagePreview').attr('src', '/ads/default-image.jpg'); // Fallback default image
+                    $('#imagePreview').attr('src', '/ads-image/default-image.jpg'); // Fallback default image
                 }
 				// Show the modal after setting the values
 				$('#edit_adss').modal('show'); // This line will display the modal

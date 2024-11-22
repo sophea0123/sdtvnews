@@ -1,0 +1,209 @@
+<!-- templates/layout.html} -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets_frontend/img/icon.png}" />
+  <!-- bootstrap-sytle -->
+  <link rel="stylesheet" th:href="@{/assets_frontend/css/bootstrap.css}" />
+  <!-- custom-style -->
+  <link rel="stylesheet" th:href="@{/assets_frontend/css/style.css}" />
+  <!-- SEO Meta Tags -->
+  <meta
+          name="description"
+          content="Get the latest breaking news, updates, and in-depth coverage on politics, business, culture, and more in Cambodia. Stay informed with SDTV NEWS."
+  />
+  <meta
+          name="keywords"
+          content="Cambodia News, SDTV News, SDTV, SDTV-News, FRESH NEWS, freshnews, fresh news, freshnewsasia.com, freshnewsasia, Latest News Cambodia, Cambodian Politics, Business News, Breaking News, Khmer News"
+  />
+  <meta name="robots" content="index, follow" />
+  <!-- Fonts links -->
+  <link
+          href="https://fonts.googleapis.com/css2?family=Hanuman&display=swap"
+          rel="stylesheet"
+  />
+
+  <title>SDTV | NEWS</title>
+</head>
+
+<div th:fragment="header" class="header">
+  <!-- Logo -->
+  <div class="header-left">
+    <a th:href="@{/dashboard}" class="logo">
+      <img th:src="@{/assets/img/logo.png}" width="110" height="65" alt="">
+    </a>
+  </div>
+  <!-- /Logo -->
+
+  <a id="toggle_btn" href="javascript:void(0)">
+                  <span class="bar-icon">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                  </span>
+  </a>
+
+  <!-- Header Title -->
+  <div class="page-title-box">
+    <h3>SDTV NEWS</h3>
+  </div>
+  <!-- /Header Title -->
+
+  <a id="mobile_btn" class="mobile_btn" th:href="@{sidebar}"><i class="fa fa-bars"></i></a>
+
+  <!-- Header Menu -->
+  <ul class="nav user-menu">
+
+    <!-- Search -->
+    <li class="nav-item">
+      <div class="top-nav-search">
+        <a href="javascript:void(0)" class="responsive-search">
+          <i class="fa fa-search"></i>
+        </a>
+        <form id="search-form" method="get" th:action="@{/article/list-article-search}">
+          <input id="search-input" class="form-control" type="text" placeholder="Search here" name="keyWord">
+          <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
+    </li>
+    <!-- /Search -->
+
+    <li class="nav-item dropdown has-arrow main-drop">
+      <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+        <span class="user-img"><img th:src="@{/assets/img/profiles/avatar-21.jpg}" alt="">
+          <span class="status online"></span>
+        </span>
+        <span th:text="${username}"></span>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" th:href="@{profile.html}">My Profile</a>
+        <a class="dropdown-item" th:href="@{settings.html}">Settings</a>
+        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+      </div>
+    </li>
+  </ul>
+  <!-- /Header Menu -->
+
+  <!-- Mobile Menu -->
+  <div class="dropdown mobile-user-menu">
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+    <div class="dropdown-menu dropdown-menu-right">
+      <a class="dropdown-item" th:href="@{profile.html}">My Profile</a>
+      <a class="dropdown-item" th:href="@{settings.html}">Settings</a>
+      <a class="dropdown-item" th:href="@{login.html}">Logout</a>
+    </div>
+  </div>
+  <!-- /Mobile Menu -->
+
+</div>
+
+<div th:fragment="sidebar" class="sidebar" id="sidebar">
+  <div class="sidebar-inner slimscroll">
+    <div id="sidebar-menu" class="sidebar-menu">
+      <ul>
+        <li class="menu-title">
+          <span>Main</span>
+        </li>
+        <li>
+          <a th:href="@{/dashboard}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
+        </li>
+        <li class="menu-title">
+          <span>Article</span>
+        </li>
+        <li>
+          <a th:href="@{/article/new-article}"><i class="la la-ticket"></i> <span>New Article</span></a>
+          <a th:href="@{/article/list-article}"><i class="la la-list"></i> <span>List Article</span></a>
+          <a th:href="@{/category/index}"><i class="la la-edit"></i> <span>Category</span></a>
+          <a th:href="@{/ads/index}"><i class="la la-money"></i> <span>ADS</span></a>
+        </li>
+<!--        <li class="menu-title">-->
+<!--          <span>Report</span>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{/article/new-article}"><i class="la"></i> <span>New Article</span></a>-->
+<!--          <a th:href="@{/article/list-article}"><i class="la la-dashboard"></i> <span>List Article</span></a>-->
+<!--          <a th:href="@{/category/index}"><i class="la la-dashboard"></i> <span>Category</span></a>-->
+<!--          <a th:href="@{/category/ads}"><i class="la la-dashboard"></i> <span>ADS</span></a>-->
+<!--        </li>-->
+        <li class="menu-title">
+          <span>Employees</span>
+        </li>
+        <li>
+          <a th:href="@{/user/index}"><i class="la la-user"></i> <span>User</span></a>
+          <a th:href="@{/role/index}"><i class="la la-key"></i> <span>Role</span></a>
+          <a th:href="@{/client/index}"><i class="la la-users"></i> <span>Clients</span></a>
+        </li>
+
+<!--        <li class="menu-title">-->
+<!--          <span>Administration</span>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{assets.html}"><i class="la la-object-ungroup"></i> <span>Assets</span></a>-->
+<!--        </li>-->
+<!--        <li class="submenu">-->
+<!--          <a href="#"><i class="la la-briefcase"></i> <span> Jobs </span> <span class="menu-arrow"></span></a>-->
+<!--          <ul style="display: none;">-->
+<!--            <li><a th:href="@{jobs.html}"> Manage Jobs </a></li>-->
+<!--            <li><a th:href="@{job-applicants.html}"> Applied Candidates </a></li>-->
+<!--          </ul>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{knowledgebase.html}"><i class="la la-question"></i> <span>Knowledgebase</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{activities.html}"><i class="la la-bell"></i> <span>Activities</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Users</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{settings.html}"><i class="la la-cog"></i> <span>Settings</span></a>-->
+<!--        </li>-->
+<!--        <li class="menu-title">-->
+<!--          <span>Settings</span>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{/sections/index}"><i class="la la-bell"></i> <span>Sections</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>About Us</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Advertise with us</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Follow Our News</span></a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Footer</span></a>-->
+<!--        </li>-->
+        <li class="menu-title">
+          <span>Sing Out</span>
+        </li>
+        <li>
+          <a th:href="@{/logout}"><i class="la la-times-circle"></i> <span> Logout</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<footer th:fragment="footer">
+  <p>&copy; 2024 My Site</p>
+</footer>
+
+
+
+<div th:fragment="scripts">
+  <!-- bootstrap-js -->
+  <script th:src="@{/assets_frontend/js/bootstrap.bundle.js}"></script>
+
+</div>
+
+
+</html>

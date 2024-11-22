@@ -14,6 +14,7 @@ import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,13 @@ public class ArticleController {
     @GetMapping("/new-article")
     public String createArticle(Model model) {
         List<CategoryResponse>lstCategory= categoryService.getActiveCategories();
-
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("lstCategory",lstCategory);
         return "dashboard/new-article";  // Return login page
     }
@@ -49,7 +57,13 @@ public class ArticleController {
         List<ListArticleDTO>lstdata = newsArticleService.getAllArticles();
         List<CategoryResponse>lstCategory= categoryService.getActiveCategories();
         List<UserResponse>lstUser= userService.getActiveUser();
-
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("lstCategory",lstCategory);
         model.addAttribute("lstUser",lstUser);
         model.addAttribute("lstdata",lstdata);
@@ -61,6 +75,13 @@ public class ArticleController {
     public String listArticleSearch(@RequestParam("keyWord") String keyWord,Model model) {
         List<ListArticleDTO>lstdata = newsArticleService.getAllArticlesSearch(keyWord);
         int count = lstdata.size();
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("lstdata",lstdata);
         model.addAttribute("keyWord",keyWord);
         model.addAttribute("count",count);
@@ -163,6 +184,14 @@ public class ArticleController {
 
         String fromDateConvert = null;
         String toDateConvert = null;
+
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
 
         // Convert fromDate if not null
         if (fromDate != null && !fromDate.isEmpty()) {
