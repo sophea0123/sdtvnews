@@ -44,4 +44,36 @@ $(document).ready(function () {
 		});
 	});
 
+    $(function () {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+
+        $("#sortable").on("sortupdate", function () {
+            const sortedData = [];
+            $("#sortable li").each(function () {
+                const id = $(this).attr("data-id");
+                if (id) { // Only include items with valid data-id
+                    const trueIndex = $(this).index(); // Get the actual index in the DOM
+                    sortedData.push({
+                        id: id,
+                        index: trueIndex
+                    });
+                }
+            });
+            // Send the sorted data to the Spring controller
+            $.ajax({
+                url: '/category/updateSorted',  // Ensure this matches your Spring controller mapping
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(sortedData),  // Send the sorted data as JSON
+                success: function(response) {
+                    console.log("Data sent successfully:", response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error sending data:", error);
+                    console.log("Response:", xhr.responseText); // Log the response for debugging
+                }
+            });
+        });
+    });
 });

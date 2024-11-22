@@ -1,5 +1,6 @@
 package com.sdtvnews.sdtvnews.services;
 
+import com.sdtvnews.sdtvnews.dto.request.SortedItem;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
 
@@ -22,8 +23,7 @@ public interface CategoryService {
 
     boolean isNameDuplicate(String name);
 
-    void moveCategory(Long categoryId, int index, String direction);
-
     List<CategoryResponse> getByCategoriesASEC();
 
+    void handleSortedData(List<SortedItem> sortedItemList);
 }

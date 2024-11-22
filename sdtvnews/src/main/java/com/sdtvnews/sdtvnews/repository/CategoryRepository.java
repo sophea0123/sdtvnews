@@ -17,7 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
 
     boolean existsByName(String name);
 
-    @Query(value = "select * from category c where status ='1'",nativeQuery = true)
+    @Query(value = "select * from category c where status ='1' order by index_show asc ",nativeQuery = true)
     List<Category>lstActiveCategory();
 
     @Query(value = "select * from category c order by index_show asc",nativeQuery = true)

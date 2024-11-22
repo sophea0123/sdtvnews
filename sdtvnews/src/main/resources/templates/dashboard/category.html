@@ -78,7 +78,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul id="sortable" class="contact-list">
-                        <li th:each="responses : ${lstResponsesData}">
+                        <li th:each="responses, index : ${lstResponsesData}"
+                            th:attr="data-id=${responses.id}, data-index=${index}">
                             <div class="contact-cont">
                                 <div class="contact-info">
                                     <span class="contact-name text-ellipsis" th:text="${responses.name}"></span>
@@ -215,13 +216,6 @@
 <script th:replace="~{/dashboard/fragments/fragment :: scripts}"></script>
 <!-- jQuery -->
 <script th:src="@{/assets/js_dashboard/category.js}"></script>
-<script>
-    $(function () {
-      $("#sortable").sortable();
-      $("#sortable").disableSelection();
-
-    });
-</script>
 
 </body>
 </html>

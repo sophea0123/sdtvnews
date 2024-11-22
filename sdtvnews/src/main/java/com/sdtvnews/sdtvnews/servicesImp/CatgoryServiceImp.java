@@ -2,6 +2,7 @@ package com.sdtvnews.sdtvnews.servicesImp;
 
 import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.config.GetUserAccess;
+import com.sdtvnews.sdtvnews.dto.request.SortedItem;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
 import com.sdtvnews.sdtvnews.entity.Category;
@@ -88,6 +89,24 @@ public class CatgoryServiceImp implements CategoryService {
         return categoryResponses;
     }
 
+    @Override
+    public void handleSortedData( List<SortedItem> sortedItemList) {
+        List<Category> listAllCategory = categoryRepository.lstBySortCategory();
+        // Iterate through each SortedItem in the provided list
+        for (SortedItem sortedItem : sortedItemList) {
+            // Find the category with the same ID as the current sortedItem
+            for (Category category : listAllCategory) {
+                if (category.getId().equals(sortedItem.getId())) {
+                    // Update the index of the category
+                    category.setIndexShow(sortedItem.getIndex());
+                    // Save the updated category back to the repository
+                    categoryRepository.save(category);
+                    // Optional: break once the category has been updated
+                    break;
+                }
+            }
+        }
+    }
 
     @Override
     public List<CategoryResponse> getActiveCategories() {
@@ -109,7 +128,6 @@ public class CatgoryServiceImp implements CategoryService {
 
         return categoryResponses;
     }
-
 
     @Override
     public Optional<CategoryResponse> getCategoryById(Long id) {
@@ -174,29 +192,6 @@ public class CatgoryServiceImp implements CategoryService {
     public boolean isNameDuplicate(String name) {
         // Check if the title exists in the database
         return categoryRepository.existsByName(name);
-    }
-
-    // Move a category up or down
-    public void moveCategory(Long categoryId, int currentIndex, String direction) {
-        List<Category> categories = categoryRepository.lstBySortCategory();
-        Category categoryToMove = categories.stream()
-                .filter(c -> c.getId().equals(categoryId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
-        // Move logic
-        int targetIndex = direction.equals("up") ? currentIndex - 1 : currentIndex + 1;
-
-        if (targetIndex < 0 || targetIndex >= categories.size()) {
-            throw new RuntimeException("Invalid move operation");
-        }
-
-        // Swap the category's index with the target index
-        Category targetCategory = categories.get(targetIndex);
-        categoryToMove.setIndexShow(targetIndex);
-        targetCategory.setIndexShow(currentIndex);
-
-        categoryRepository.saveAll(Arrays.asList(categoryToMove, targetCategory));
     }
 
 }

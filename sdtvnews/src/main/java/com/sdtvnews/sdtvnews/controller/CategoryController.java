@@ -2,6 +2,7 @@ package com.sdtvnews.sdtvnews.controller;
 
 import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
+import com.sdtvnews.sdtvnews.dto.request.SortedItem;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
 import com.sdtvnews.sdtvnews.entity.Category;
 import com.sdtvnews.sdtvnews.repository.CategoryRepository;
@@ -37,7 +38,6 @@ public class CategoryController {
         model.addAttribute("lstResponsesData",lstResponsesData);
         return "dashboard/category";  // Return login page
     }
-
 
     @PostMapping("/create")
     public String createCategory(@ModelAttribute CategoryRequest request, RedirectAttributes redirectAttributes) {
@@ -120,27 +120,12 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    // Get a list of all categories as JSON
-    @GetMapping("/list")
+    @PostMapping("/updateSorted" )
     @ResponseBody
-    public List<CategoryResponse> getCategories() {
-        return categoryService.getByCategoriesASEC();  // Returns categories as JSON
+    public ResponseEntity handleSortedData(@RequestBody List<SortedItem> sortedItems) {
+        categoryService.handleSortedData(sortedItems);
+        // Return a success response
+        return ResponseEntity.ok("Data received successfully");
     }
 
-//    // Endpoint to move a category up or down
-//    @PostMapping("/move")
-//    @ResponseBody
-//    public void moveCategory(@RequestBody CategoryRequest request) {
-//        categoryService.moveCategory(request.getId(), request.getIndexShow(), request.getDirection());
-//    }
-
-    @PostMapping("/items/updateOrder")
-    @ResponseBody
-    public String updateOrder(@RequestBody List<Category> categories) {
-        for (Category item : categories) {
-            // Update only the orderIndex of the item
-            categoryRepository.updateOrderIndex(item.getId(), item.getIndexShow());
-        }
-        return "Order updated successfully!";
-    }
 }

@@ -29,10 +29,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-//                                .requestMatchers("/dashboard").hasAnyRole("USER", "ADMIN")
-//                                .anyRequest().permitAll()
+                                authorizeRequests
                                 .requestMatchers("/login", "/resources/**", "/assets/**", "/api/**").permitAll()// Allow access to all assets
                                 .requestMatchers("/dashboard").hasAnyRole("ADMIN", "USER") // Allow access to both user and admin
                                 .anyRequest().authenticated()
