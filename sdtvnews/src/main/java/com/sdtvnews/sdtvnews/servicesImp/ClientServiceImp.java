@@ -127,6 +127,11 @@ public class ClientServiceImp implements ClientService {
         }
     }
 
+    @Override
+    public void deleteClient(Long id) {
+        clientRepository.deleteById(id);
+    }
+
     public boolean isNameDuplicate(String name) {
         // Check if the title exists in the database
         return clientRepository.existsByName(name);

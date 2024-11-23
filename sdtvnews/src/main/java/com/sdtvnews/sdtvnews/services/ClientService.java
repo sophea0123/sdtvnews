@@ -18,5 +18,7 @@ public interface ClientService {
 
     void updateClientStatus(Long id, String status);
 
+    void deleteClient(Long id);
+
     boolean isNameDuplicate(String name);
 }

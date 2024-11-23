@@ -21,4 +21,6 @@ public interface UserService {
     void updateUserStatus(Long id, String status);
 
     boolean isNameDuplicate(String name);
+
+    void deleteUser(Long id);
 }

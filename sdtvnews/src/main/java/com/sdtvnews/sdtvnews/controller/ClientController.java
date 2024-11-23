@@ -35,8 +35,6 @@ public class ClientController {
         boolean isAdmin = authorities.stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         model.addAttribute("isAdmin", isAdmin);
-
-
         model.addAttribute("lstResponsesData",lstResponsesData);
         return "dashboard/clients";  // Return login page
     }
@@ -59,9 +57,7 @@ public class ClientController {
     @ResponseBody
     public ResponseEntity<ClientResponse> getClientById(@PathVariable String id) {
         try {
-
             Optional<ClientResponse> response = clientService.getClientById(Long.valueOf(id));
-            System.out.println("response"+response.toString());
             // Check if the response is present
             if (response.isPresent()) {
                 return ResponseEntity.ok(response.get()); // Return the found section
@@ -117,11 +113,21 @@ public class ClientController {
     @GetMapping("/checkNameDuplicate")
     public ResponseEntity<Map<String, Boolean>> checkTitleDuplicate(@RequestParam("name") String name) {
         boolean isDuplicate = clientService.isNameDuplicate(name); // Call service to check duplication
-
         // Prepare response
         Map<String, Boolean> response = new HashMap<>();
         response.put("isDuplicate", isDuplicate);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteArticle(@PathVariable Long id) {
+        try {
+            // Your delete logic here
+            clientService.deleteClient(id);
+            return ResponseEntity.ok("Client deleted successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete client");
+        }
     }
 
 }

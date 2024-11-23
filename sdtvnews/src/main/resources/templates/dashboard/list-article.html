@@ -177,7 +177,9 @@
 													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
 													<div class="dropdown-menu dropdown-menu-right">
 														<a class="dropdown-item" th:href="@{/article/find-by/{id}(id=${responses.id})}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-														<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_project" data-id="ARTICLE_ID" th:if="${isAdmin}"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+														<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_project" th:data-id="${responses.id}" th:if="${isAdmin}">
+															<i class="fa fa-trash-o m-r-5"></i> Delete
+														</a>
 													</div>
 												</div>
 											</td>
@@ -189,15 +191,13 @@
 					</div>
                 </div>
 				<!-- /Page Content -->
-
-				<!-- Delete Project Modal -->
 				<div class="modal custom-modal fade" id="delete_project" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
 								<div class="form-header">
-									<h3>Delete Project</h3>
-									<p>Are you sure want to delete?</p>
+									<h3>Delete Article</h3>
+									<p>Are you sure you want to delete?</p>
 								</div>
 								<div class="modal-btn delete-action">
 									<div class="row">
@@ -213,7 +213,6 @@
 						</div>
 					</div>
 				</div>
-				<!-- /Delete Project Modal -->
 				
             </div>
 			<!-- /Page Wrapper -->
@@ -224,5 +223,36 @@
 	<!-- jQuery -->
 	<script th:replace="~{/dashboard/fragments/fragment :: scripts}"></script>
 	<!-- jQuery -->
+	<script>
+		let articleId = ''; // Store the ARTICLE_ID for deletion
+
+		// When the modal is triggered, set the articleId
+		$('#delete_project').on('show.bs.modal', function (event) {
+			const button = $(event.relatedTarget); // Button that triggered the modal
+			articleId = button.data('id'); // Extract ARTICLE_ID from data-id
+		});
+
+		// Handle the delete confirmation button click
+		$('#confirmDelete').on('click', function () {
+			if (articleId) {
+				const deleteUrl = `/article/delete/${articleId}`; // Construct the delete URL dynamically
+				$.ajax({
+					url: deleteUrl,
+					type: 'DELETE', // HTTP DELETE request
+					success: function (response) {
+						// Notify user and refresh the page
+						location.reload(); // Optionally reload to update the UI
+					},
+					error: function (xhr, status, error) {
+						// Handle the error
+						alert(`Failed to delete the article: ${xhr.responseText || error}`);
+					}
+				});
+			} else {
+				alert('Invalid article ID.');
+			}
+		});
+	</script>
+
     </body>
 </html>

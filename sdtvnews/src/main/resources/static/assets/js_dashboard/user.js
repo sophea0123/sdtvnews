@@ -70,4 +70,32 @@ $(document).ready(function () {
     	});
 
 
+    let userId = ''; // Store the ARTICLE_ID for deletion
+    // When the modal is triggered, set the articleId
+    $('#delete_project').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget); // Button that triggered the modal
+        userId = button.data('id'); // Extract ARTICLE_ID from data-id
+    });
+
+    // Handle the delete confirmation button click
+    $('#confirmDelete').on('click', function () {
+        if (userId) {
+            const deleteUrl = `/user/delete/${userId}`; // Construct the delete URL dynamically
+            $.ajax({
+                url: deleteUrl,
+                type: 'DELETE', // HTTP DELETE request
+                success: function (response) {
+                    // Notify user and refresh the page
+                    location.reload(); // Optionally reload to update the UI
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error
+                    alert(`Failed to delete the article: ${xhr.responseText || error}`);
+                }
+            });
+        } else {
+            alert('Invalid article ID.');
+        }
+    });
+
 });
