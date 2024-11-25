@@ -2,6 +2,8 @@ package com.sdtvnews.sdtvnews.repository;
 
 import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.entity.NewsArticle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -207,9 +209,30 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
     boolean existsByTitle(String title);
 
     @Query(value = "select * from news_article na where status ='1' order by na.create_date desc",nativeQuery = true)
-    List<NewsArticle>listNewsArticlesActive();
+    Page<NewsArticle> listNewsArticlesActive(Pageable pageable);
 
     @Query(value = "select * from news_article na where status ='1' and cate_id = :cateId order by na.create_date desc ",nativeQuery = true)
-    List<NewsArticle>listNewsArticlesActiveByCategory(Long cateId);
+    Page<NewsArticle>listNewsArticlesActiveByCategory(Long cateId,Pageable pageable);
+
+    @Query(value = "SELECT \n" +
+            "    na.id,\n" +
+            "    na.title,\n" +
+            "    na.content,\n" +
+            "    na.create_date,\n" +
+            "    c.name,\n" +
+            "    na.status,\n" +
+            "    CONCAT(u.first_name, ' ', u.last_name) AS full_name\n" +
+            "FROM \n" +
+            "    news_article na\n" +
+            "INNER JOIN \n" +
+            "    category c \n" +
+            "    ON na.cate_id = c.id\n" +
+            "INNER JOIN \n" +
+            "    `user` u \n" +
+            "    ON na.create_by = u.id\n" +
+            "WHERE na.title LIKE :keyWord \n" +
+            "ORDER BY \n" +
+            "    na.create_date DESC;" ,nativeQuery = true)
+    Page<ListArticleDTO>listArticleBySearchFronted(String keyWord,Pageable pageable);
 
 }

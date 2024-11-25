@@ -101,7 +101,6 @@ public class ArticleController {
         return "dashboard/list-article-search";
     }
 
-
     @GetMapping("/find-by/{id}")
     public String findById(@PathVariable String id, Model model) {
         NewsArticle lstdata = newsArticleService.getArticleById(Long.valueOf(id));

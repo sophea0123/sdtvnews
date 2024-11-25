@@ -4,26 +4,23 @@ package com.sdtvnews.sdtvnews.servicesImp;
 import com.sdtvnews.sdtvnews.config.*;
 import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
-import com.sdtvnews.sdtvnews.entity.Ads;
 import com.sdtvnews.sdtvnews.entity.NewsArticle;
 import com.sdtvnews.sdtvnews.repository.NewsArticleRepository;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional
@@ -149,13 +146,9 @@ public class NewsArticleServiceImpl implements NewsArticleService {
         return newsArticleRepository.existsByTitle(title);
     }
 
-//    @Override
-//    public Page<NewsArticle> getNewsArticle(Pageable pageable) {
-//        return newsArticleRepository.findAll(pageable);;
-//    }
-
     @Override
     public void deleteArticle(Long id) {
         newsArticleRepository.deleteById(id);
     }
+
 }

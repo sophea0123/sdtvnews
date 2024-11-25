@@ -39,7 +39,7 @@
                   </div>
                 </div>
                 <!-- ads -->
-                <!-- contect -->
+                <!-- Content -->
                 <div class="col-md-12 mt-2" th:each="news : ${newsList}">
                   <a th:href="@{/home/category-detail/{id}(id=${news.id})}" class="no-underline">
                     <div class="row mb-3">
@@ -57,6 +57,7 @@
                     </div>
                   </a>
                 </div>
+
                 <!-- Default message when newsList is empty -->
                 <div th:if="${#lists.isEmpty(newsList)}" class="col-md-12 mt-2" style="text-align: center; color: black;">
                   <p>No news available at the moment.</p>
@@ -75,31 +76,33 @@
                 <!-- ads -->
 
                 <!-- Pagination -->
-<!--                <div class="col-md-12 text-dark">-->
-<!--                  <div class="row align-items-center">-->
-<!--                    <div class="col-md-7">-->
-<!--                      <nav aria-label="Page navigation example">-->
-<!--                        <ul class="pagination">-->
-<!--                          <li class="page-item" th:class="${currentPage == 1} ? 'disabled'">-->
-<!--                            <a class="page-link" th:href="@{/home/category/{page}(page=${currentPage - 1})}">Previous</a>-->
-<!--                          </li>-->
-
-<!--                          &lt;!&ndash; Loop through the pages &ndash;&gt;-->
-<!--                          <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:class="${i == currentPage} ? 'active'">-->
-<!--                            <a class="page-link" th:href="@{/home/category/{page}(page=${i})}" th:text="${i}"></a>-->
-<!--                          </li>-->
-
-<!--                          <li class="page-item" th:class="${currentPage == totalPages} ? 'disabled'">-->
-<!--                            <a class="page-link" th:href="@{/home/category/{page}(page=${currentPage + 1})}">Next</a>-->
-<!--                          </li>-->
-<!--                        </ul>-->
-<!--                      </nav>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-5 text-end">-->
-<!--                      <span class="fw-normal" th:text="'Page ' + ${currentPage} + ' of ' + ${totalPages}"></span>-->
-<!--                    </div>-->
-<!--                  </div>-->
-<!--                </div>-->
+                <div class="col-md-12 text-dark">
+                  <div class="row align-items-center">
+                    <div class="col-md-7">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                          <li class="page-item" th:class="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/home/(page=${currentPage - 1}, size=${size})}" aria-label="Previous">
+                              Previous
+                            </a>
+                          </li>
+                          <!-- Loop through the pages -->
+                          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/home/(page=${i}, size=${size})}" th:text="${i + 1}"></a>
+                          </li>
+                          <li class="page-item" th:class="${currentPage == totalPages - 1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/home/(page=${currentPage + 1}, size=${size})}" aria-label="Next">
+                              Next
+                            </a>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                    <div class="col-md-5 text-end">
+                      <span class="fw-normal" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
+                    </div>
+                  </div>
+                </div>
                 <!-- End Pagination -->
               </div>
             </div>

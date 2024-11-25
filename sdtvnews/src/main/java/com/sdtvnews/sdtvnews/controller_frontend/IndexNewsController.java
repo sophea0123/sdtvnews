@@ -8,10 +8,11 @@ import com.sdtvnews.sdtvnews.repository.AdsRepository;
 import com.sdtvnews.sdtvnews.repository.CategoryRepository;
 import com.sdtvnews.sdtvnews.repository.NewsArticleRepository;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
-import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -43,6 +43,9 @@ public class IndexNewsController {
     @Value("${youtube-video.link}")
     private String youtubeVideolink;
 
+    @Value("${page-size}")
+    private int pageSize;
+
     @Autowired
     NewsArticleRepository newsArticleRepository;
     @Autowired
@@ -53,7 +56,8 @@ public class IndexNewsController {
     NewsArticleService newsArticleService;
 
     @GetMapping("/")
-    public String dashboard(Model model) {
+    public String dashboard(Model model,@RequestParam(defaultValue = "0") int page) {
+
         List<ListArticleDTO>listMarquee=newsArticleRepository.listMarquee();
         // Concatenate the titles of the articles, separated by "*"
         String concatenatedMarquee = listMarquee.stream()
@@ -69,21 +73,23 @@ public class IndexNewsController {
         //list active ads
         List<Ads>adsList=adsRepository.listActiveAds();
         model.addAttribute("adsList",adsList);
-        //list news data
-        List<NewsArticle> newsArticles =newsArticleRepository.listNewsArticlesActive();
+        // Fetch paginated news articles
+        Page<NewsArticle> newsArticlesPage = newsArticleRepository.listNewsArticlesActive(PageRequest.of(page, pageSize));
         List<News> newsList = new ArrayList<>();
-        for (NewsArticle newsArticle : newsArticles) {
+        for (NewsArticle newsArticle : newsArticlesPage.getContent()) {
             News news = new News();
-            String content = newsArticle.getContent();  // Assuming NewsArticle has a getContent() method
-            String firstImage = extractFirstImage(content);  // Assuming extractFirstImage() is your custom method to get the first image URL
-            news.setFirstImage(firstImage);  // Setting the extracted first image URL
-            news.setTitle(newsArticle.getTitle());  // Setting title if needed
+            String content = newsArticle.getContent();
+            String firstImage = extractFirstImage(content);
+            news.setFirstImage(firstImage);
+            news.setTitle(newsArticle.getTitle());
             news.setId(String.valueOf(newsArticle.getId()));
             news.setCreateDate(newsArticle.getCreateDate());
-            // Set other fields like title, id, etc., here as well
             newsList.add(news);
         }
-        model.addAttribute("newsList",newsList);
+        model.addAttribute("newsList", newsList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", newsArticlesPage.getTotalPages());
+        model.addAttribute("size", pageSize);
         //model map social
         model.addAttribute("facebookLink",facebookLink);
         model.addAttribute("youtubeLink",youtubeLink);
@@ -92,7 +98,7 @@ public class IndexNewsController {
     }
 
     @GetMapping("/category/{cateName}")
-    public String category(Model model, @PathVariable String cateName) {
+    public String category(Model model, @PathVariable String cateName,@RequestParam(defaultValue = "0") int page) {
         if ("ទំព័រដើម".equals(cateName)) {
             return "redirect:/home/";
         }
@@ -114,7 +120,7 @@ public class IndexNewsController {
         //find category id
         Long cateId= categoryRepository.cateId(cateName);
         //list news data
-        List<NewsArticle> newsArticles = newsArticles=newsArticleRepository.listNewsArticlesActiveByCategory(cateId);
+        Page<NewsArticle> newsArticles = newsArticles=newsArticleRepository.listNewsArticlesActiveByCategory(cateId,PageRequest.of(page, pageSize));
         List<News> newsList = new ArrayList<>();
         for (NewsArticle newsArticle : newsArticles) {
             News news = new News();
@@ -128,6 +134,10 @@ public class IndexNewsController {
             newsList.add(news);
         }
         model.addAttribute("newsList",newsList);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", newsArticles.getTotalPages());
+        model.addAttribute("size", pageSize);
+        model.addAttribute("cateName", cateName);
         //model map social
         model.addAttribute("facebookLink",facebookLink);
         model.addAttribute("youtubeLink",youtubeLink);
@@ -136,7 +146,7 @@ public class IndexNewsController {
     }
 
     @GetMapping("/category-search")
-    public String categorySearch(@RequestParam("keyWord") String keyWord,Model model) {
+    public String categorySearch(@RequestParam("keyWord") String keyWord,Model model,@RequestParam(defaultValue = "0") int page) {
         List<ListArticleDTO>listMarquee=newsArticleRepository.listMarquee();
         // Concatenate the titles of the articles, separated by "*"
         String concatenatedMarquee = listMarquee.stream()
@@ -153,7 +163,8 @@ public class IndexNewsController {
         List<Ads>adsList=adsRepository.listActiveAds();
         model.addAttribute("adsList",adsList);
         //list news data
-        List<ListArticleDTO> newsArticles = newsArticleService.getAllArticlesSearch(keyWord);
+        String keyWordConcate = "%" + keyWord + "%";
+        Page<ListArticleDTO> newsArticles = newsArticleRepository.listArticleBySearchFronted(keyWordConcate,PageRequest.of(page, pageSize));
         List<News> newsList = new ArrayList<>();
         for (ListArticleDTO newsArticle : newsArticles) {
             News news = new News();
@@ -168,9 +179,12 @@ public class IndexNewsController {
         }
 
         model.addAttribute("newsList",newsList);
-        int count = newsArticles.size();
+        int count = (int) newsArticles.getTotalElements();
         model.addAttribute("keyWord",keyWord);
         model.addAttribute("count",count);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", newsArticles.getTotalPages());
+        model.addAttribute("size", pageSize);
         //model map social
         model.addAttribute("facebookLink",facebookLink);
         model.addAttribute("youtubeLink",youtubeLink);
@@ -251,16 +265,5 @@ public class IndexNewsController {
 
         return "fronted/contact";
     }
-
-//    @GetMapping("/home/category")
-//    public String getCategories(@RequestParam(defaultValue = "1") int page,Model model) {
-//        int pageSize = 5; // Customize as needed
-//        Page<NewsArticle> newsArticlePage = newsArticleService.getNewsArticle(PageRequest.of(page - 1, pageSize));
-//
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", categoryPage.getTotalPages());
-//        model.addAttribute("categories", categoryPage.getContent());
-//        return "category"; // Thymeleaf template name
-//    }
 
 }

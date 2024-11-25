@@ -73,34 +73,33 @@
 <!--                &lt;!&ndash; ads &ndash;&gt;-->
 
                 <!-- pagination -->
-                <div class="col-md-12 text-dark" th:unless="${#lists.isEmpty(newsList)}">
-                  <div class="row align-items-center">
-                    <div class="col-md-7">
-                      <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                          <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">1</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                          </li>
-                        </ul>
-                      </nav>
-                    </div>
-                    <div class="col-md-5 text-end">
-                      <span class="fw-normal">Page 1 of 20</span>
-                    </div>
+                  <div class="col-md-12 text-dark" th:unless="${#lists.isEmpty(newsList)}">
+                      <div class="row align-items-center">
+                          <div class="col-md-7">
+                              <nav aria-label="Page navigation example">
+                                  <ul class="pagination">
+                                      <li class="page-item" th:class="${currentPage == 0} ? 'disabled'">
+                                          <a class="page-link" th:href="@{/home/category-search(keyWord=${keyWord}, page=${currentPage - 1})}" aria-label="Previous">
+                                              Previous
+                                          </a>
+                                      </li>
+                                      <!-- Loop through the pages -->
+                                      <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage} ? 'active'">
+                                          <a class="page-link" th:href="@{/home/category-search(keyWord=${keyWord}, page=${i})}" th:text="${i + 1}"></a>
+                                      </li>
+                                      <li class="page-item" th:class="${currentPage == totalPages - 1} ? 'disabled'">
+                                          <a class="page-link" th:href="@{/home/category-search(keyWord=${keyWord}, page=${currentPage + 1})}" aria-label="Next">
+                                              Next
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </nav>
+                          </div>
+                          <div class="col-md-5 text-end">
+                              <span class="fw-normal" th:text="'Page ' + (${currentPage + 1}) + ' of ' + ${totalPages}"></span>
+                          </div>
+                      </div>
                   </div>
-                </div>
                 <!-- end pagination -->
               </div>
             </div>
