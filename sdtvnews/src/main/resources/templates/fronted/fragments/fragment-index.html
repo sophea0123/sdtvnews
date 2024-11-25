@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+<!-- head of navbar -->
 <head th:fragment="head">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,198 +13,171 @@
   <!-- custom-style -->
   <link rel="stylesheet" th:href="@{/assets_frontend/css/style.css}" />
   <!-- SEO Meta Tags -->
-  <meta
-          name="description"
-          content="Get the latest breaking news, updates, and in-depth coverage on politics, business, culture, and more in Cambodia. Stay informed with SDTV NEWS."
-  />
-  <meta
-          name="keywords"
-          content="Cambodia News, SDTV News, SDTV, SDTV-News, FRESH NEWS, freshnews, fresh news, freshnewsasia.com, freshnewsasia, Latest News Cambodia, Cambodian Politics, Business News, Breaking News, Khmer News"
-  />
+  <meta name="description" content="Get the latest breaking news, updates, and in-depth coverage on politics, business, culture, and more in Cambodia. Stay informed with SDTV NEWS." />
+  <meta name="keywords" content="Cambodia News, SDTV News, SDTV, SDTV-News, FRESH NEWS, freshnews, fresh news, freshnewsasia.com, freshnewsasia, Latest News Cambodia, Cambodian Politics, Business News, Breaking News, Khmer News" />
   <meta name="robots" content="index, follow" />
   <!-- Fonts links -->
-  <link
-          href="https://fonts.googleapis.com/css2?family=Hanuman&display=swap"
-          rel="stylesheet"
-  />
-
+  <link href="https://fonts.googleapis.com/css2?family=Hanuman&display=swap" rel="stylesheet" />
   <title>SDTV | NEWS</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+<!-- end head of navbar -->
 
-<div th:fragment="header" class="header">
-  <!-- Logo -->
-  <div class="header-left">
-    <a th:href="@{/dashboard}" class="logo">
-      <img th:src="@{/assets/img/logo.png}" width="110" height="65" alt="">
-    </a>
-  </div>
-  <!-- /Logo -->
-
-  <a id="toggle_btn" href="javascript:void(0)">
-                  <span class="bar-icon">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                  </span>
-  </a>
-
-  <!-- Header Title -->
-  <div class="page-title-box">
-    <h3>SDTV NEWS</h3>
-  </div>
-  <!-- /Header Title -->
-
-  <a id="mobile_btn" class="mobile_btn" th:href="@{sidebar}"><i class="fa fa-bars"></i></a>
-
-  <!-- Header Menu -->
-  <ul class="nav user-menu">
-
-    <!-- Search -->
-    <li class="nav-item">
-      <div class="top-nav-search">
-        <a href="javascript:void(0)" class="responsive-search">
-          <i class="fa fa-search"></i>
-        </a>
-        <form id="search-form" method="get" th:action="@{/article/list-article-search}">
-          <input id="search-input" class="form-control" type="text" placeholder="Search here" name="keyWord">
-          <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-        </form>
-      </div>
-    </li>
-    <!-- /Search -->
-
-    <li class="nav-item dropdown has-arrow main-drop">
-      <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-        <span class="user-img"><img th:src="@{/assets/img/profiles/avatar-21.jpg}" alt="">
-          <span class="status online"></span>
-        </span>
-        <span th:text="${username}"></span>
-      </a>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" th:href="@{profile.html}">My Profile</a>
-        <a class="dropdown-item" th:href="@{settings.html}">Settings</a>
-        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
-      </div>
-    </li>
-  </ul>
-  <!-- /Header Menu -->
-
-  <!-- Mobile Menu -->
-  <div class="dropdown mobile-user-menu">
-    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-    <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" th:href="@{profile.html}">My Profile</a>
-      <a class="dropdown-item" th:href="@{settings.html}">Settings</a>
-      <a class="dropdown-item" th:href="@{login.html}">Logout</a>
+<!-- header of navbar -->
+<nav class="navbar navbar-expand-xl navbar-light bg-light rounded-top pt-4 px-3" th:fragment="nav" >
+  <div class="container-fluid">
+    <a class="navbar-brand text-danger d-none d-lg-block" th:href="@{/home/}">SDTV News</a>
+    <!-- logo -->
+    <div class="col-8 my-auto d-lg-none mb-2">
+      <img th:src="@{/assets_frontend/img/SDTV1.png}" alt="logo" style="width: 90%" />
     </div>
-  </div>
-  <!-- /Mobile Menu -->
-
-</div>
-
-<div th:fragment="sidebar" class="sidebar" id="sidebar">
-  <div class="sidebar-inner slimscroll">
-    <div id="sidebar-menu" class="sidebar-menu">
-      <ul>
-        <li class="menu-title">
-          <span>Main</span>
-        </li>
-        <li>
-          <a th:href="@{/dashboard}"><i class="la la-dashboard"></i> <span> Dashboard</span></a>
-        </li>
-        <li class="menu-title">
-          <span>Article</span>
-        </li>
-        <li>
-          <a th:href="@{/article/new-article}"><i class="la la-ticket"></i> <span>New Article</span></a>
-          <a th:href="@{/article/list-article}"><i class="la la-list"></i> <span>List Article</span></a>
-          <a th:href="@{/category/index}"><i class="la la-edit"></i> <span>Category</span></a>
-          <a th:href="@{/ads/index}"><i class="la la-money"></i> <span>ADS</span></a>
-        </li>
-<!--        <li class="menu-title">-->
-<!--          <span>Report</span>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{/article/new-article}"><i class="la"></i> <span>New Article</span></a>-->
-<!--          <a th:href="@{/article/list-article}"><i class="la la-dashboard"></i> <span>List Article</span></a>-->
-<!--          <a th:href="@{/category/index}"><i class="la la-dashboard"></i> <span>Category</span></a>-->
-<!--          <a th:href="@{/category/ads}"><i class="la la-dashboard"></i> <span>ADS</span></a>-->
-<!--        </li>-->
-        <li class="menu-title">
-          <span>Employees</span>
-        </li>
-        <li>
-          <a th:href="@{/user/index}"><i class="la la-user"></i> <span>User</span></a>
-          <a th:href="@{/role/index}"><i class="la la-key"></i> <span>Role</span></a>
-          <a th:href="@{/client/index}"><i class="la la-users"></i> <span>Clients</span></a>
-        </li>
-
-<!--        <li class="menu-title">-->
-<!--          <span>Administration</span>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{assets.html}"><i class="la la-object-ungroup"></i> <span>Assets</span></a>-->
-<!--        </li>-->
-<!--        <li class="submenu">-->
-<!--          <a href="#"><i class="la la-briefcase"></i> <span> Jobs </span> <span class="menu-arrow"></span></a>-->
-<!--          <ul style="display: none;">-->
-<!--            <li><a th:href="@{jobs.html}"> Manage Jobs </a></li>-->
-<!--            <li><a th:href="@{job-applicants.html}"> Applied Candidates </a></li>-->
-<!--          </ul>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{knowledgebase.html}"><i class="la la-question"></i> <span>Knowledgebase</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{activities.html}"><i class="la la-bell"></i> <span>Activities</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Users</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{settings.html}"><i class="la la-cog"></i> <span>Settings</span></a>-->
-<!--        </li>-->
-<!--        <li class="menu-title">-->
-<!--          <span>Settings</span>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{/sections/index}"><i class="la la-bell"></i> <span>Sections</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>About Us</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Advertise with us</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Follow Our News</span></a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--          <a th:href="@{users.html}"><i class="la la-user-plus"></i> <span>Footer</span></a>-->
-<!--        </li>-->
-        <li class="menu-title">
-          <span>Sing Out</span>
-        </li>
-        <li>
-          <a th:href="@{/logout}"><i class="la la-times-circle"></i> <span> Logout</span></a>
+    <!-- end logo -->
+    <button class="navbar-toggler d-xl-none ms-auto"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapsibleNavId"
+            aria-controls="collapsibleNavId"
+            aria-expanded="false"
+            aria-label="Toggle navigation" >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavId" style="font-family: sans-serif, 'Hanuman'">
+      <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+        <li class="nav-item" th:each="category : ${lstActiveCategory}">
+          <!-- Dynamically set the href and text -->
+          <a class="nav-link" th:href="@{/home/category/{cateName}(cateName=${category.name})}" th:text="${category.name}"></a>
         </li>
       </ul>
+<!--      <form class="d-flex my-2 my-lg-0">-->
+<!--        <input class="form-control rounded-5" type="text" placeholder="Search..."/>-->
+<!--      </form>-->
+      <form class="d-flex my-2 my-lg-0" id="search-form" method="get" th:action="@{/home/category-search}">
+        <input id="search-input" class="form-control rounded-5" type="text" placeholder="Search here" name="keyWord">
+<!--        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
+      </form>
+    </div>
+  </div>
+</nav>
+<!-- end header of navbar -->
+
+<div th:fragment="sidebar">
+
+</div>
+<!-- ads and logo -->
+<div th:fragment="logo-ads" class="row mb-2">
+  <!-- logo -->
+  <div class="col-md-4 my-auto d-none d-md-block">
+    <img th:src="@{/assets_frontend/img/SDTV1.png}" alt="logo" style="width: 90%" />
+  </div>
+  <!-- end logo -->
+  <!-- ads -->
+  <div class="col-md-8" th:each="ads : ${adsList}">
+    <!-- Check if the ad's local field is 'Content Bottom' -->
+    <div th:if="${ads.local == 'Header Top'}">
+      <a th:href="@{${ads.url}}" target="_blank">
+        <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="d-block w-100" />
+      </a>
+    </div>
+  </div>
+  <!-- end ads -->
+</div>
+<!-- end ads and logo -->
+
+<!-- sidebar-right-ads -->
+<div th:fragment="sidebar-right-ads" class="col-md-3 d-none d-md-block">
+  <div class="row">
+    <div class="col-md-12 mb-2" th:each="ads : ${adsList}">
+      <!-- Check if the ad's local field is 'Right Top' -->
+      <div th:if="${ads.local == 'Right Top'}">
+        <a th:href="@{${ads.url}}" target="_blank">
+          <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="w-100" />
+        </a>
+      </div>
+    </div>
+    <div class="col-md-12 mb-2" th:each="ads : ${adsList}">
+      <!-- Check if the ad's local field is 'Right Middle' -->
+      <div th:if="${ads.local == 'Right Middle'}">
+        <a th:href="@{${ads.url}}" target="_blank">
+          <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="w-100" />
+        </a>
+      </div>
+    </div>
+    <div class="col-md-12 mb-2" th:each="ads : ${adsList}">
+      <!-- Check if the ad's local field is 'Right Bottom' -->
+      <div th:if="${ads.local == 'Right Bottom'}">
+        <a th:href="@{${ads.url}}" target="_blank">
+          <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="w-100" />
+        </a>
+      </div>
     </div>
   </div>
 </div>
+<!-- end sidebar-right-ads -->
 
 
-<footer th:fragment="footer">
-  <p>&copy; 2024 My Site</p>
+<!-- marquee text slider -->
+<marquee th:fragment="marquee" class="marquee-text my-2" behavior="scroll" direction="left" scrollamount="8">
+  <!-- Dynamically inject marqueeText into the marquee -->
+  <span th:text="${concatenatedMarquee}"></span>
+</marquee>
+<!-- end marquee text slider -->
+
+<!-- footer -->
+<footer th:fragment="footer" class="container-fluid mt-4 d-none d-md-block">
+  <div class="row">
+    <div class="col-md-6 ps-0 pt-4 pb-5">
+      <h4>Section</h4>
+      <div class="row" style="font-family: sans-serif, 'Hanuman'">
+        <div th:each="category : ${lstActiveCategory}" class="col-4">
+          <a th:href="@{/home/category/{cateName}(cateName=${category.name})}" class="nav-link" th:text="${category.name}"></a>
+        </div>
+      </div>
+      <h4 class="mt-4">About Us</h4>
+      <div class="row">
+        <div class="col-4">
+          <a th:href="@{/home/contact}" class="nav-link">About</a>
+        </div>
+        <div class="col-4">
+          <a th:href="@{/home/contact}" class="nav-link">Contact us</a>
+        </div>
+      </div>
+      <h4 class="mt-4">Advertise with us</h4>
+      <p>Tel: 077 818 204, Email: sdtvnewsonline@gmail.com & Telegram</p>
+    </div>
+    <div class="col-6 border-start ps-5 pt-4 pb-5">
+      <h4>Follow our News</h4>
+      <div class="row">
+        <div class="col-1 mx-2">
+          <a th:href="@{${facebookLink}}" target="_blank">
+            <img th:src="@{/assets_frontend/img/facebook.png}" alt="facebook page" class="icon" />
+          </a>
+        </div>
+        <div class="col-1 mx-2">
+          <a th:href="@{${youtubeLink}}" target="_blank">
+            <img th:src="@{/assets_frontend/img/youtube.png}" alt="" class="icon" />
+          </a>
+        </div>
+        <div class="col-1 mx-2">
+          <a th:href="@{${telegramLink}}" target="_blank">
+            <img th:src="@{/assets_frontend/img/telegrame.png}" alt="" class="icon" />
+          </a>
+        </div>
+      </div>
+      <h4 class="mt-4"></h4>
+      <p>Copyright © 2024 SDTV NEWS</p>
+      <h4>Address</h4>
+      <p class="mt-2">Group 2 Road, Chumrov Village, Sangkat Kork Roka, Phnom Penh,Cambodia</p>
+    </div>
+  </div>
 </footer>
+<!-- end footer -->
 
-
-
+<!-- scripts -->
 <div th:fragment="scripts">
   <!-- bootstrap-js -->
   <script th:src="@{/assets_frontend/js/bootstrap.bundle.js}"></script>
-
 </div>
-
+<!-- end scripts -->
 
 </html>

@@ -10,9 +10,12 @@ import com.sdtvnews.sdtvnews.repository.NewsArticleRepository;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -27,13 +30,16 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class NewsArticleServiceImpl implements NewsArticleService {
 
+    @Value("${file.upload-image}")
+    String imageDirectory ;
+
     private final NewsArticleRepository newsArticleRepository;
     @Autowired
     GetUserAccess getUserAccess;
 
     @Override
     public NewsArticle createArticle(NewsArticleRequest request) throws IOException {
-        String updatedContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle());
+        String updatedContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle(),imageDirectory);
         // Create a new NewsArticle object
         NewsArticle article = new NewsArticle();
         article.setTitle(request.getTitle());
@@ -50,7 +56,7 @@ public class NewsArticleServiceImpl implements NewsArticleService {
 
     @Override
     public void updateSections(Long id, NewsArticleRequest request) throws IOException {
-        String updateContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle());
+        String updateContent = ImageUtil.processBase64Images(request.getContent(), request.getTitle(),imageDirectory);
         Optional<NewsArticle> newsArticle = newsArticleRepository.findById(id);
         if (newsArticle.isPresent()) {
             NewsArticle article = newsArticle.get();
@@ -142,6 +148,12 @@ public class NewsArticleServiceImpl implements NewsArticleService {
         // Check if the title exists in the database
         return newsArticleRepository.existsByTitle(title);
     }
+
+//    @Override
+//    public Page<NewsArticle> getNewsArticle(Pageable pageable) {
+//        return newsArticleRepository.findAll(pageable);;
+//    }
+
     @Override
     public void deleteArticle(Long id) {
         newsArticleRepository.deleteById(id);

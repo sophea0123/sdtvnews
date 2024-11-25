@@ -33,8 +33,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
                                 authorizeRequests
-                                .requestMatchers("/login","/index","/index/**", "/resources/**", "/assets/**"
-                                        ,"/assets_frontend/**", "/api/**","/ads-image/**").permitAll()// Allow access to all assets
+                                .requestMatchers("/login","/home","/home/**", "/resources/**", "/assets/**"
+                                        ,"/assets_frontend/**", "/api/**","/ads-image/**","/images","/images/**").permitAll()// Allow access to all assets
                                 .requestMatchers("/dashboard").hasAnyRole("ADMIN", "USER") // Allow access to both user and admin
                                  .requestMatchers("/category/**","/ads/**","/user/**","/role/**","/client/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()

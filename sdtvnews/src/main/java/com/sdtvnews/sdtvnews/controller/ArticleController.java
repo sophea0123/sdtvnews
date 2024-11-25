@@ -10,7 +10,6 @@ import com.sdtvnews.sdtvnews.entity.NewsArticle;
 import com.sdtvnews.sdtvnews.services.CategoryService;
 import com.sdtvnews.sdtvnews.services.NewsArticleService;
 import com.sdtvnews.sdtvnews.services.UserService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +52,7 @@ public class ArticleController {
         model.addAttribute("lstCategory",lstCategory);
         return "dashboard/new-article";  // Return login page
     }
+
     @GetMapping("/list-article")
     public String listArticle(Model model) {
         List<ListArticleDTO>lstdata = newsArticleService.getAllArticles();
@@ -106,6 +106,13 @@ public class ArticleController {
     public String findById(@PathVariable String id, Model model) {
         NewsArticle lstdata = newsArticleService.getArticleById(Long.valueOf(id));
         List<CategoryResponse>lstCategory= categoryService.getActiveCategories();
+        // Retrieve the authorities of the logged-in user
+        Collection<? extends GrantedAuthority> authorities =
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        // Check for admin role
+        boolean isAdmin = authorities.stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("lstCategory",lstCategory);
         model.addAttribute("categoryId", lstdata.getCateId());
         model.addAttribute("lstdata",lstdata);

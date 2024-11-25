@@ -12,6 +12,7 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
     @Query(value = "SELECT \n" +
             "    na.id,\n" +
             "    na.title,\n" +
+            "    na.content,\n" +
             "    na.create_date,\n" +
             "    c.name,\n" +
             "    na.status,\n" +
@@ -205,5 +206,10 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
 
     boolean existsByTitle(String title);
 
+    @Query(value = "select * from news_article na where status ='1'",nativeQuery = true)
+    List<NewsArticle>listNewsArticlesActive();
+
+    @Query(value = "select * from news_article na where status ='1' and cate_id = :cateId ",nativeQuery = true)
+    List<NewsArticle>listNewsArticlesActiveByCategory(Long cateId);
 
 }

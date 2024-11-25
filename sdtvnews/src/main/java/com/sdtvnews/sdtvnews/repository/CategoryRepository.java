@@ -23,6 +23,9 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
     @Query(value = "select * from category c order by index_show asc",nativeQuery = true)
     List<Category>lstBySortCategory();
 
+    @Query(value = "select c.id from category c where name= :cateName ",nativeQuery = true)
+    Long cateId(String cateName);
+
     @Modifying
     @Query(value = "UPDATE category i SET i.index_show = :orderIndex WHERE i.id = :id",nativeQuery = true)
     void updateOrderIndex(@Param("id") Long id, @Param("orderIndex") int orderIndex);

@@ -17,7 +17,6 @@ INSERT INTO your_table_name (
 
 ### table role ###
 
-
 INSERT INTO table_name (id, description, name, create_by, create_date, delete_by, delete_date, status, update_by, update_date)
 VALUES
 (1, 'Can access erverything', 'Admin', NULL, '2024-10-29 16:12:54', NULL, NULL, 1, NULL, '2024-10-29 16:14:23'),

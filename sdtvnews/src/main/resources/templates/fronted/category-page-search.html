@@ -19,23 +19,28 @@
           <div class="col-md-9 pe-0">
             <div class="row">
               <div class="col-md-12">
-                <!-- Content Top Advertisement Image -->
-                <div class="col-md-12 mt-1" th:each="ads : ${adsList}">
-                  <!-- Check if the ad's local field is 'Content Top' -->
-                  <div th:if="${ads.local == 'Content Top'}">
-                    <a th:href="@{${ads.url}}" target="_blank">
-                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />
-                    </a>
-                  </div>
-                </div>
-                <!-- Content Middle Advertisement Image -->
-                <div class="col-md-12 mt-1" th:each="ads : ${adsList}">
-                  <!-- Check if the ad's local field is 'Content Middle' -->
-                  <div th:if="${ads.local == 'Content Middle'}">
-                    <a th:href="@{${ads.url}}" target="_blank">
-                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />
-                    </a>
-                  </div>
+<!--                &lt;!&ndash; Content Top Advertisement Image &ndash;&gt;-->
+<!--                <div class="col-md-12 mt-1" th:each="ads : ${adsList}">-->
+<!--                  &lt;!&ndash; Check if the ad's local field is 'Content Top' &ndash;&gt;-->
+<!--                  <div th:if="${ads.local == 'Content Top'}">-->
+<!--                    <a th:href="@{${ads.url}}" target="_blank">-->
+<!--                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />-->
+<!--                    </a>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; Content Middle Advertisement Image &ndash;&gt;-->
+<!--                <div class="col-md-12 mt-1" th:each="ads : ${adsList}">-->
+<!--                  &lt;!&ndash; Check if the ad's local field is 'Content Middle' &ndash;&gt;-->
+<!--                  <div th:if="${ads.local == 'Content Middle'}">-->
+<!--                    <a th:href="@{${ads.url}}" target="_blank">-->
+<!--                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />-->
+<!--                    </a>-->
+<!--                  </div>-->
+<!--                </div>-->
+
+                <div class="search-result" style="color : black">
+                  <h3>Search Result Found For: <u><span th:text="${keyWord}"></span></u></h3>
+                  <p><span th:text="${count}"></span> Results found</p>
                 </div>
                 <!-- Content -->
                 <div class="col-md-12 mt-2" th:each="news : ${newsList}">
@@ -55,25 +60,20 @@
                     </div>
                   </a>
                 </div>
-                <!-- Default message when newsList is empty -->
-                <div th:if="${#lists.isEmpty(newsList)}" class="col-md-12 mt-2" style="text-align: center; color: black;">
-                  <p>No news available at the moment.</p>
-                </div>
-                <!-- End Content -->
 
-                <!-- ads -->
-                <div class="col-md-12 my-2" th:each="ads : ${adsList}">
-                  <!-- Check if the ad's local field is 'Content Top' -->
-                  <div th:if="${ads.local == 'Content Bottom'}">
-                    <a th:href="@{${ads.url}}" target="_blank">
-                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />
-                    </a>
-                  </div>
-                </div>
-                <!-- ads -->
+<!--                &lt;!&ndash; ads &ndash;&gt;-->
+<!--                <div class="col-md-12 my-2" th:each="ads : ${adsList}">-->
+<!--                  &lt;!&ndash; Check if the ad's local field is 'Content Top' &ndash;&gt;-->
+<!--                  <div th:if="${ads.local == 'Content Bottom'}">-->
+<!--                    <a th:href="@{${ads.url}}" target="_blank">-->
+<!--                      <img th:src="@{'/ads-image/' + ${ads.image}}" alt="..." class="img-fluid w-100" />-->
+<!--                    </a>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                &lt;!&ndash; ads &ndash;&gt;-->
 
                 <!-- pagination -->
-                <div class="col-md-12 text-dark">
+                <div class="col-md-12 text-dark" th:unless="${#lists.isEmpty(newsList)}">
                   <div class="row align-items-center">
                     <div class="col-md-7">
                       <nav aria-label="Page navigation example">

@@ -3,8 +3,10 @@ package com.sdtvnews.sdtvnews.services;
 import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
 import com.sdtvnews.sdtvnews.dto.request.NewsArticleRequest;
 import com.sdtvnews.sdtvnews.entity.NewsArticle;
+import org.hibernate.query.Page;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.List;
 
@@ -28,5 +30,6 @@ public interface NewsArticleService {
 
     boolean isTitleDuplicate(String title);
 
+    //Page<NewsArticle> getNewsArticle(Pageable pageable);
 }
 

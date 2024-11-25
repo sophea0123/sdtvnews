@@ -9,6 +9,7 @@ import com.sdtvnews.sdtvnews.repository.AdsRepository;
 import com.sdtvnews.sdtvnews.services.AdsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +31,8 @@ public class AdsServiceImp implements AdsService {
 
     private final AdsRepository advertiseWithUsRepository;
 
-    private static final String UPLOAD_DIRECTORY = "D:/ads/";
+    @Value("${file.upload-ads}")
+    String UPLOAD_DIRECTORY_ADS;
 
     @Autowired
     GetUserAccess getUserAccess;
@@ -49,7 +51,7 @@ public class AdsServiceImp implements AdsService {
         String uniqueFileName = UUID.randomUUID().toString() + "_" + sanitizedFileName;
 
         // Define the full path where the file will be stored
-        String imagePath = UPLOAD_DIRECTORY + uniqueFileName;
+        String imagePath = UPLOAD_DIRECTORY_ADS + uniqueFileName;
 
         // Save the file to the server
         File destinationFile = new File(imagePath);
@@ -144,7 +146,7 @@ public class AdsServiceImp implements AdsService {
     public String saveImage(MultipartFile imageFile) throws IOException {
         // Generate a unique filename to avoid conflicts
         String filename = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-        Path imagePath = Paths.get(UPLOAD_DIRECTORY, filename);
+        Path imagePath = Paths.get(UPLOAD_DIRECTORY_ADS, filename);
 
         // Save the file
         Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
