@@ -206,10 +206,10 @@ public interface NewsArticleRepository extends JpaRepository<NewsArticle,Long> {
 
     boolean existsByTitle(String title);
 
-    @Query(value = "select * from news_article na where status ='1'",nativeQuery = true)
+    @Query(value = "select * from news_article na where status ='1' order by na.create_date desc",nativeQuery = true)
     List<NewsArticle>listNewsArticlesActive();
 
-    @Query(value = "select * from news_article na where status ='1' and cate_id = :cateId ",nativeQuery = true)
+    @Query(value = "select * from news_article na where status ='1' and cate_id = :cateId order by na.create_date desc ",nativeQuery = true)
     List<NewsArticle>listNewsArticlesActiveByCategory(Long cateId);
 
 }
