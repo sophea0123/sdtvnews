@@ -90,7 +90,6 @@ public class AdsController {
     @GetMapping("/activate/{id}")
     public String activateAds(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
-
             adsService.updateAdsStatus(Long.valueOf(id),"1");
             redirectAttributes.addFlashAttribute("active", "ADS status activate updated successfully.");
         } catch (CustomException e) {

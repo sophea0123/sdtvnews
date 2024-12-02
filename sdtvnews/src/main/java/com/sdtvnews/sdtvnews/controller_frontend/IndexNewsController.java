@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +41,9 @@ public class IndexNewsController {
 
     @Value("${youtube-video.link}")
     private String youtubeVideolink;
+
+    @Value("${youtube-video.format}")
+    private String youtubeFormat;
 
     @Value("${page-size}")
     private int pageSize;
@@ -99,9 +101,11 @@ public class IndexNewsController {
 
     @GetMapping("/category/{cateName}")
     public String category(Model model, @PathVariable String cateName,@RequestParam(defaultValue = "0") int page) {
-        if ("ទំព័រដើម".equals(cateName)) {
+        // Check index to show on home page
+        if ("ទំព័រដើម".equalsIgnoreCase(cateName.trim())) {
             return "redirect:/home/";
         }
+
         List<ListArticleDTO>listMarquee=newsArticleRepository.listMarquee();
         // Concatenate the titles of the articles, separated by "*"
         String concatenatedMarquee = listMarquee.stream()
@@ -205,7 +209,7 @@ public class IndexNewsController {
         List<Category>lstActiveCategory=categoryRepository.lstActiveCategory();
         model.addAttribute("lstActiveCategory",lstActiveCategory);
         //link for youtube video on dashboard
-        model.addAttribute("youtubeVideolink",youtubeVideolink+"?autoplay=1&mute=1&");
+        model.addAttribute("youtubeVideolink",youtubeVideolink+youtubeFormat);
         //list active ads
         List<Ads>adsList=adsRepository.listActiveAds();
         model.addAttribute("adsList",adsList);

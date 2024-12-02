@@ -1,11 +1,9 @@
 package com.sdtvnews.sdtvnews.dto.request;
 
-import com.sdtvnews.sdtvnews.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

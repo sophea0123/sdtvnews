@@ -85,22 +85,6 @@ public class AdvertiseWithUsRestController {
         }
     }
 
-//    @RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<ResponseDTO<?>> updateAds(@RequestBody AdsRequest request) {
-//        try {
-//            log.info("Request to update Ads: {}", objectMapper.writeValueAsString(request));
-//            advertiseWithUsService.updateAds(Long.valueOf(request.getId()), request);
-//            return ResponseEntity.ok(new ResponseDTO<>("success", "Ads updated successfully", null));
-//        } catch (CustomException e) {
-//            log.warn("Error updating advertiseWithUs: {}", e.getMessage());
-//            return ResponseEntity.badRequest().body(new ResponseDTO<>("error", e.getMessage(), null));
-//        } catch (Exception e) {
-//            log.error("Error processing request: {}", e);
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDTO<>("error", "An unexpected error occurred.", null));
-//        }
-//    }
-
-
     @RequestMapping(value = "/update-status", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<?>> updateAdsStatus(@RequestBody AdsRequest request) {
         try {

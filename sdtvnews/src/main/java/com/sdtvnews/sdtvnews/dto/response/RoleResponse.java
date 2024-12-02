@@ -1,12 +1,9 @@
 package com.sdtvnews.sdtvnews.dto.response;
 
-import com.sdtvnews.sdtvnews.entity.User;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter

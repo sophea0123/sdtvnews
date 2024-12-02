@@ -4,7 +4,6 @@ import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.dto.request.CategoryRequest;
 import com.sdtvnews.sdtvnews.dto.request.SortedItem;
 import com.sdtvnews.sdtvnews.dto.response.CategoryResponse;
-import com.sdtvnews.sdtvnews.entity.Category;
 import com.sdtvnews.sdtvnews.repository.CategoryRepository;
 import com.sdtvnews.sdtvnews.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +94,6 @@ public class CategoryController {
     @GetMapping("/activate/{id}")
     public String activateCategory(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("string id:" + id);
             // Call your service to activate the section
             categoryService.updateCategoryStatus(Long.valueOf(id),"1");
             redirectAttributes.addFlashAttribute("active", "Category status activate updated successfully.");
@@ -120,7 +118,6 @@ public class CategoryController {
     @GetMapping("/checkNameDuplicate")
     public ResponseEntity<Map<String, Boolean>> checkTitleDuplicate(@RequestParam("name") String name) {
         boolean isDuplicate = categoryService.isNameDuplicate(name); // Call service to check duplication
-
         // Prepare response
         Map<String, Boolean> response = new HashMap<>();
         response.put("isDuplicate", isDuplicate);

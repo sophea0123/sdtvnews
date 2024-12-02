@@ -122,18 +122,13 @@ public class ArticleController {
     @PostMapping("/create")
     public String createSections(@ModelAttribute("article") NewsArticleRequest request, RedirectAttributes redirectAttributes) {
         try {
-
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
             if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
                 CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                 Long userId = userDetails.getId(); // Retrieve user ID from the authenticated user
 
                 request.setUserId(userId); // Set the user ID in the request
             }
-
-
-
             newsArticleService.createArticle(request);  // Attempt to create section
             redirectAttributes.addFlashAttribute("create", "Article created successfully!");
         } catch (Exception e) {
@@ -146,7 +141,6 @@ public class ArticleController {
     @PostMapping("/update")
     public String updateSections(@ModelAttribute("article") NewsArticleRequest request, RedirectAttributes redirectAttributes) {
         try {
-
             newsArticleService.updateSections(Long.valueOf(request.getId()),request);  // Attempt to create section
             redirectAttributes.addFlashAttribute("update", "Article update successfully!");
         } catch (Exception e) {
@@ -199,10 +193,8 @@ public class ArticleController {
 
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         String fromDateConvert = null;
         String toDateConvert = null;
-
         // Retrieve the authorities of the logged-in user
         Collection<? extends GrantedAuthority> authorities =
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities();

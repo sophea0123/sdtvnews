@@ -40,20 +40,11 @@ public class NewsArticleRestController {
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createArticle(@RequestParam("title") String title,
                                            @RequestParam("content") String content,
-//                                           @RequestParam(value = "cateId", required = false) String cateId,
-//                                           @RequestParam(value = "userId", required = false) String userId,
-//                                           @RequestParam(value = "scheduleDate", required = false) String scheduleDate,
-//                                           @RequestParam(value = "scheduleStatus", required = false) String scheduleStatus,
                                            @RequestParam("images") MultipartFile[] images) {
         try {
             NewsArticleRequest request = new NewsArticleRequest();
             request.setTitle(title);
             request.setContent(content);
-//            request.setCateId(Long.valueOf(cateId));
-//            request.setUserId(Long.valueOf(userId));
-//            request.setScheduleDate(LocalDateTime.parse(scheduleDate, formatter));
-//            request.setScheduleStatus(Integer.valueOf(scheduleStatus));
-            //request.setImages(images);
             NewsArticle createdArticle = newsArticleService.createArticle(request);
             return ResponseEntity.ok(new ResponseDTO<>("success", "News article created successfully", createdArticle));
         } catch (Exception e) {

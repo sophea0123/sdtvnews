@@ -87,7 +87,7 @@
 
                                     <td>
                                         <a th:if="${#strings.isEmpty(responses.url)}" th:text="'N/A'"></a>
-                                        <a th:if="${!#strings.isEmpty(responses.url)}" th:href="${responses.url}" target="_blank" th:text="'Click Here'"></a>
+                                        <a th:if="${!#strings.isEmpty(responses.url)}" th:href="@{${responses.url}}" target="_blank" th:text="'Click Here'"></a>
                                     </td>
                                     <td th:text="${responses.local}"></td>
                                     <td th:text="${#temporals.format(responses.createDate, 'dd-MM-yyyy HH:mm a')}"></td>

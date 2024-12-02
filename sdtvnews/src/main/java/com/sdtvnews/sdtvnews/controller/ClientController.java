@@ -4,7 +4,6 @@ import com.sdtvnews.sdtvnews.config.CustomException;
 import com.sdtvnews.sdtvnews.dto.request.ClientRequest;
 import com.sdtvnews.sdtvnews.dto.response.ClientResponse;
 import com.sdtvnews.sdtvnews.services.ClientService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

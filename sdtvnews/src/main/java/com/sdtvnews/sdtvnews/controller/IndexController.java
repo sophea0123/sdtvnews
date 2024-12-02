@@ -2,7 +2,6 @@ package com.sdtvnews.sdtvnews.controller;
 
 import com.sdtvnews.sdtvnews.config.security.CustomUserDetails;
 import com.sdtvnews.sdtvnews.dto.ListArticleDTO;
-import com.sdtvnews.sdtvnews.dto.ListUserDTO;
 import com.sdtvnews.sdtvnews.entity.Category;
 import com.sdtvnews.sdtvnews.entity.User;
 import com.sdtvnews.sdtvnews.repository.CategoryRepository;

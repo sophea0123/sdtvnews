@@ -29,7 +29,6 @@ public class UserController {
 
     @GetMapping("/index")
     public String indexPage(Model model) {
-
         List<UserResponse>lstResponsesData= userService.getAllUser();
         List<RoleResponse>roleResponses=roleService.getActiveRole();
 
@@ -40,7 +39,6 @@ public class UserController {
         boolean isAdmin = authorities.stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
         model.addAttribute("isAdmin", isAdmin);
-        System.out.println(isAdmin);
 
         model.addAttribute("lstResponsesData",lstResponsesData);
         model.addAttribute("roleResponses",roleResponses);
@@ -65,7 +63,6 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<UserResponse> getUserById(@PathVariable String id) {
         try {
-
             Optional<UserResponse> response = userService.getUserById(Long.valueOf(id));
             // Check if the response is present
             if (response.isPresent()) {
